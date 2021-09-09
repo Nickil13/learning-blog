@@ -15,27 +15,40 @@ export default function NewPost() {
     const{userInfo} = useGlobalContext();
     const[message,setMessage] = useState("");
     const[messageType,setMessageType] = useState("default");
+    const[previewSource,setPreviewSource] = useState('');
 
 
     const tagList = ['none','animals','food','travel','games','code','wellness'];
-    const imageTypes = ['image/png','image/jpeg'];
+    // const imageTypes = ['image/png','image/jpeg'];
 
+    const previewFile = (file) => {
+        console.log(file);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setPreviewSource(reader.result);
+        }
+    }
     const changeHandler = async (e) => {
         let file = e.target.files[0];
-        if(file && imageTypes.includes(file.type)){
-            
-            //Upload the image
-            const formData = new FormData();
-            formData.append('file',file);
+        previewFile(file);
+        if(file) setImageName(file.name); 
+    }
     
+    const uploadImage = async(e) => {
+        e.preventDefault();
+        if(previewSource){
+            
+            //Uploade to cloudinary
+
             try{
-                const res = await axios.post('/api/upload', formData,
+                const {data} = await axios.post('/api/upload/cloudinary', JSON.stringify({data: previewSource}),
                 {headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
                 }} )
-                const {fileName, filePath} = res.data;
-                setImagePath(filePath);
-                setImageName(fileName);
+                console.log(data);
+                setImagePath(previewSource);
+                
                 
                 }catch(error){
                     if(error.response.status === 500){
@@ -47,6 +60,33 @@ export default function NewPost() {
 
         }
     }
+    // const changeHandler = async (e) => {
+    //     let file = e.target.files[0];
+    //     if(file && imageTypes.includes(file.type)){
+            
+    //         //Upload the image
+    //         const formData = new FormData();
+    //         formData.append('file',file);
+    
+    //         try{
+    //             const res = await axios.post('/api/upload', formData,
+    //             {headers: {
+    //                 'Content-Type': 'multipart/form-data'
+    //             }} )
+    //             const {fileName, filePath} = res.data;
+    //             setImagePath(filePath);
+    //             setImageName(fileName);
+                
+    //             }catch(error){
+    //                 if(error.response.status === 500){
+    //                     console.log("There was a problem with the server.");
+    //                 }else{
+    //                     console.log(error.response.data.msg);
+    //                 }
+    //             }
+
+    //     }
+    // }
     const handleComboSelect = (e) =>{
         let comboBoxes = document.querySelectorAll("select");
         let newTags = [];
@@ -93,7 +133,7 @@ export default function NewPost() {
         <div className="grid md:grid-cols-2 place-items-center">
             <h1 className="mb-10 md:col-span-2">New Post</h1>
             <div className="md:col-start-1 h-full">
-                <img className="object-cover h-full" src={imagePath} onError={(e)=>{e.target.onerror =null; e.target.src="/images/default.jfif"}} alt="default" />
+                <img className="object-cover h-full" src={previewSource} onError={(e)=>{e.target.onerror =null; e.target.src="/images/default.jfif"}} alt="default" />
             </div>
             <form className="grid md:col-start-2 w-5/6" onSubmit={handleSubmit}>
                 {/* Title Input */}
@@ -103,7 +143,7 @@ export default function NewPost() {
                 </div>
 
                 {/* Image Input */}
-                <ImageInput name={imageName} onChange={changeHandler}/>
+                <ImageInput name={imageName} onChange={changeHandler} onUploadClick={uploadImage}/>
                 
 
                 {/* Tag Inputs */}

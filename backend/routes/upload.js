@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {access} = require('fs');
+const { cloudinary } = require('../utils/cloudinary');
 
 
 
@@ -32,6 +33,26 @@ router.post('/', (req, res)=>{
         }
     })
     
+
+})
+
+// @desc    Upload an image to cloudinary
+// @route   POST /api/upload
+// @access  Public
+router.post('/cloudinary', async (req, res)=>{
+
+    try{
+        const fileStr = req.body.data;
+        const uploadedResponse =await cloudinary.uploader.upload(fileStr, {
+            folder: 'blog'
+        })
+        console.log(uploadedResponse);
+        res.json({msg:"Successfully uploaded the image!"});
+    }catch(error){
+        console.error(error);
+        res.status(400).json({error: "No file was uploaded."})
+    }
+  
 
 })
 

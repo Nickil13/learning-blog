@@ -1,7 +1,7 @@
 import React from 'react'
 import { BsImage} from 'react-icons/bs';
 
-export default function ImageInput({name, onChange}) {
+export default function ImageInput({name, onChange, onUploadClick}) {
     return ( 
         <div className="p-5 flex gap-5 justify-between items-center">
             <p>Image</p>
@@ -9,7 +9,8 @@ export default function ImageInput({name, onChange}) {
                 <p className="post-input mr-5">{name}</p>
                 <label className="mr-5 mb-3 dark:text-gray-400" htmlFor="image"><BsImage className="cursor-pointer hover:text-purple-500 dark:hover:text-white text-2xl"/></label>
             </div>
-            <input className="hidden" type="file" id="image" placeholder="an image" onChange={onChange}/>
+            <input className="hidden" accept="image/*" type="file" id="image" placeholder="an image" onChange={onChange}/>
+            <button className="btn-primary" onClick={onUploadClick}>Upload</button>
         </div>
     )
 }
