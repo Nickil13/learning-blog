@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(fileUpload());
 
 
@@ -22,8 +22,8 @@ app.use('/api/posts',postsRoute);
 const usersRoute = require('./routes/users');
 app.use('/api/users',usersRoute);
 
-const uploadsRoute = require('./routes/upload');
-app.use('/api/upload', uploadsRoute);
+const cloudinaryRoute = require('./routes/cloudinaryRoutes');
+app.use('/api/cloudinary', cloudinaryRoute);
 
 
 //Connect to DB

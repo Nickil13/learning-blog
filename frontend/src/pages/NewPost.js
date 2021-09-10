@@ -1,8 +1,9 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ComboBox from '../components/ComboBox';
 import Message from '../components/Message';
 import ImageInput from '../components/ImageInput';
+import ImageSelector from '../components/ImageSelector';
 import { useGlobalContext } from '../context';
 
 export default function NewPost() {
@@ -16,11 +17,18 @@ export default function NewPost() {
     const[message,setMessage] = useState("");
     const[messageType,setMessageType] = useState("default");
     const[previewSource,setPreviewSource] = useState('');
-
+    const[selectedImage,setSelectedImage] = useState(null);
+    const[selectorShowing,setSelectorShowing] = useState(false);
 
     const tagList = ['none','animals','food','travel','games','code','wellness'];
-    // const imageTypes = ['image/png','image/jpeg'];
-
+    
+    useEffect(()=>{
+        if(selectedImage){
+            setImageName(`${selectedImage.public_id.split("/")[1]}.${selectedImage.format}`);
+            setImagePath(selectedImage.url);
+            setPreviewSource(selectedImage.url);
+        }
+    },[selectedImage])
     const previewFile = (file) => {
         console.log(file);
         const reader = new FileReader();
@@ -31,62 +39,39 @@ export default function NewPost() {
     }
     const changeHandler = async (e) => {
         let file = e.target.files[0];
-        previewFile(file);
-        if(file) setImageName(file.name); 
+        
+        if(file){
+            previewFile(file);
+            setImageName(file.name);
+        }
     }
     
     const uploadImage = async(e) => {
         e.preventDefault();
         if(previewSource){
-            
-            //Uploade to cloudinary
-
+           
+            //Upload to cloudinary
             try{
-                const {data} = await axios.post('/api/upload/cloudinary', JSON.stringify({data: previewSource}),
+                const {data} = await axios.post('/api/cloudinary/upload', JSON.stringify({data: previewSource,file_name: imageName}),
                 {headers: {
                     'Content-Type': 'application/json'
                 }} )
-                console.log(data);
-                setImagePath(previewSource);
+                
+                
+                const url = data.uploadedResponse.url;
+                setImagePath(url);
+                console.log(data.msg);
                 
                 
                 }catch(error){
-                    if(error.response.status === 500){
-                        console.log("There was a problem with the server.");
-                    }else{
-                        console.log(error.response.data.msg);
-                    }
+                    console.log(error.response.data);
+                    
                 }
 
         }
     }
-    // const changeHandler = async (e) => {
-    //     let file = e.target.files[0];
-    //     if(file && imageTypes.includes(file.type)){
-            
-    //         //Upload the image
-    //         const formData = new FormData();
-    //         formData.append('file',file);
-    
-    //         try{
-    //             const res = await axios.post('/api/upload', formData,
-    //             {headers: {
-    //                 'Content-Type': 'multipart/form-data'
-    //             }} )
-    //             const {fileName, filePath} = res.data;
-    //             setImagePath(filePath);
-    //             setImageName(fileName);
-                
-    //             }catch(error){
-    //                 if(error.response.status === 500){
-    //                     console.log("There was a problem with the server.");
-    //                 }else{
-    //                     console.log(error.response.data.msg);
-    //                 }
-    //             }
 
-    //     }
-    // }
+    
     const handleComboSelect = (e) =>{
         let comboBoxes = document.querySelectorAll("select");
         let newTags = [];
@@ -143,8 +128,10 @@ export default function NewPost() {
                 </div>
 
                 {/* Image Input */}
-                <ImageInput name={imageName} onChange={changeHandler} onUploadClick={uploadImage}/>
+                <ImageInput name={imageName} onChange={changeHandler} onUploadClick={uploadImage} setSelectorShowing={setSelectorShowing}/>
                 
+                {/* Image Selector */}
+                {selectorShowing && <ImageSelector onSetSelected={setSelectedImage} setSelectorShowing={setSelectorShowing}/>}
 
                 {/* Tag Inputs */}
                 <div id="tag-box" className="flex flex-col md:flex-row justify-between items-center p-5 gap-2">
