@@ -9,6 +9,7 @@ export const AppProvider = ({children}) => {
     const[loginMessage,setLoginMessage] = useState("");
     const[isConfirmDelete,setIsConfirmDelete] = useState(false);
     const[isAlertShowing,setIsAlertShowing] = useState(false);
+    const[loading,setLoading] = useState(false);
 
     
     useEffect(()=>{
@@ -21,8 +22,9 @@ export const AppProvider = ({children}) => {
     },[])
 
     useEffect(()=>{
-        let localTheme = localStorage.getItem('theme');
-        setTheme(localTheme);
+        if(localStorage.getItem('theme')){
+            setTheme(localStorage.getItem('theme'));
+        }
     },[])
 
     const toggleTheme = () => {
@@ -83,7 +85,9 @@ export const AppProvider = ({children}) => {
         closeAlert,
         isAlertShowing,
         toggleTheme,
-        theme
+        theme,
+        loading,
+        setLoading
     }}>
         {children}
     </AppContext.Provider>

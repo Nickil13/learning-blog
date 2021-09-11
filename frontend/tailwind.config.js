@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        'admin-table': 'repeat(3, 3fr) 4fr',
+        'admin-table': 'repeat(3, 3fr) 2fr',
       }
     }
   },

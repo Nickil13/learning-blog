@@ -1,9 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import Cell from '../components/Cell';
+
+import AdminRow from '../components/AdminRow';
 import Alert from '../components/Alert';
-import { useHistory} from 'react-router-dom';
 import { useGlobalContext} from '../context';
 
 export default function Admin() {
@@ -12,7 +11,7 @@ export default function Admin() {
     const[currentPosts,setCurrentPosts] = useState([]);
     const[currentPage,setCurrentPage] = useState("1");
     const itemsPerPage = 6;
-    const history = useHistory();
+    
     const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete} = useGlobalContext();
     const[isDeleting,setIsDeleting] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
@@ -92,44 +91,17 @@ export default function Admin() {
                 <h2 className="text-gray-100">All Posts</h2>
                 
                 <div className="grid grid-cols-admin-table mb-1 rounded-md text-gray-100">
-                    <Cell>Title</Cell>
-                    <Cell>Tags</Cell>
-                    <Cell>Date</Cell>
-                    <Cell>Edit/Remove Post</Cell>       
+                    <div className="lg:w-4/5 p-2">Title</div>
+                    <div className="lg:w-4/5 p-2">Tags</div>
+                    <div className="lg:w-4/5 p-2">Date</div>
+                    <div className="lg:w-4/5 p-2">Edit/Remove Post</div>       
                 </div>
 
                 <div className="grid grid-flow-row">
                     {currentPosts.length === 0 ? <h2>No Posts Found</h2> : 
                     currentPosts.map((post)=>{
                         return(
-                            // Row
-                            <div key={post._id} className="grid place-items-center w-4/5 sm:w-full mx-auto sm:grid-cols-admin-table bg-gray-300 dark:bg-purple-200 mb-1 rounded-md">
-                                
-                                {/* First Column - Title */}
-                                <Cell>
-                                    <Link to={`/posts/${post._id}`} className="hover:underline">{post.title}
-                                    </Link>
-                                </Cell>
-                                
-                                {/* Second Column - Tags */}
-                                <Cell>
-                                    <ul>
-                                        {post.tags.map((tag,index)=>{
-                                            return <li key={index} className="text-purple-600 p-1">#{tag}</li>
-                                        })}
-                                    </ul>
-                                </Cell>
-            
-                                {/* Third Column - Date */}
-                                <Cell>{post.createdAt}</Cell>
-                                
-                                {/* Fourth Column - Date */}
-                                <Cell>
-                                    <button className="btn-primary w-20 mr-2" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}>edit</button>
-                                    <button className="btn-primary w-20" onClick={()=>handleDeletePost(post)}>remove</button>
-                                </Cell>
-                                
-                            </div>
+                            <AdminRow key={post._id} post={post} handleDeletePost={handleDeletePost}/>
                         );
                     })
                     }
