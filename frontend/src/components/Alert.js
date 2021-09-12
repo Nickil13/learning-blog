@@ -1,6 +1,5 @@
 import React from 'react';
 import {useGlobalContext} from '../context';
-import { FaTimes } from 'react-icons/fa';
 
 export default function Alert({postName}) {
     const{closeAlert,confirmDelete} = useGlobalContext();
@@ -19,10 +18,7 @@ export default function Alert({postName}) {
                     <button className="btn-primary bg-white w-16" onClick={handleConfirmDelete}>yes</button>
                     <button className="btn-primary bg-white w-16" onClick={closeAlert}>no</button>
                 </div>
-                
-                {/* <span className="absolute top-0 right-0 p-2 cursor-pointer" onClick={closeAlert}><FaTimes/></span> */}
-                
-                
+           
             </div>
             
         </div>

@@ -10,7 +10,16 @@ export const AppProvider = ({children}) => {
     const[isConfirmDelete,setIsConfirmDelete] = useState(false);
     const[isAlertShowing,setIsAlertShowing] = useState(false);
     const[loading,setLoading] = useState(false);
+    const[message,setMessage] = useState("");
+    const[messageType,setMessageType] = useState("default");
+    const[messageLink,setMessageLink] = useState('');
 
+    const updateMessage = (text,type,link) => {
+        setMessage(text);
+        setMessageType(type);
+        setMessageLink(link);
+
+    }
     
     useEffect(()=>{
         // Check if there is a user already logged in
@@ -87,7 +96,11 @@ export const AppProvider = ({children}) => {
         toggleTheme,
         theme,
         loading,
-        setLoading
+        setLoading,
+        updateMessage,
+        message,
+        messageType,
+        messageLink
     }}>
         {children}
     </AppContext.Provider>

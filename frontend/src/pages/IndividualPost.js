@@ -54,7 +54,7 @@ export default function IndividualPost() {
                 </ul>
                 <img className="object-cover max-h-60 md:max-h-96 w-full" src={post.image} alt={post.title}/>
                 <div className="py-5">
-                {post.text.split('\n').map((paragraph,index)=>{
+                {post.text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
                     return <p key={index}>{paragraph}<br/><br/></p>
                     })}
                 </div>

@@ -17,7 +17,7 @@ export default function Post({_id,title,text,tags,image,createdAt}) {
               </ul>
               
               <div className="p-5">{
-                 text.split('\n').map((paragraph,index)=>{
+                 text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
                     return <p key={index}>{paragraph}<br/><br/></p>
                 })
               }</div>

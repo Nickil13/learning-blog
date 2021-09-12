@@ -116,7 +116,7 @@ export default function Admin() {
             
             {/* All Posts Container */}
             <div className="p-10 w-full">
-                <h2>Posts</h2>
+                <h2 className="border-b-2 pb-2 m-2">Posts</h2>
                 
                 {loading? <Loader/> : currentPosts.length === 0 ? <h2>No Posts Found</h2> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">

@@ -36,8 +36,8 @@ export default function ImageSelector({onSetSelected, setSelectorShowing}) {
     }
     return (
         <div className="fixed z-10 top-0 right-0 bottom-0 left-0 grid place-items-center">
-            <div className="grid bg-white border-8 border-gray-300 w-4/5 max-w-2xl mx-auto my-5 px-5 py-10 rounded-md shadow-md">
-            <h2 className="text-2xl text-center pb-5 border-b-2 border-gray-300 font-semibold">Select an Image</h2>
+            <div className="grid bg-white dark:bg-gray-500 border-8 border-gray-300 dark:border-purple-200 w-4/5 max-w-2xl mx-auto my-5 px-5 py-10 rounded-md shadow-md">
+            <h2 className="text-2xl text-center pb-5 border-b-2 border-gray-300 dark:border-purple-200 font-semibold">Select an Image</h2>
             <div className="grid grid-cols-2 p-5 h-72">
                 <ul className="list-none ml-2 mr-5 overflow-y-scroll overscroll-y-contain pr-2">
                     {images && images.map((image,index)=>{
