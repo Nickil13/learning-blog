@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import AdminRow from '../components/AdminRow';
 import Alert from '../components/Alert';
+import Loader from '../components/Loader';
 import { useGlobalContext} from '../context';
 
 export default function Admin() {
@@ -12,13 +13,15 @@ export default function Admin() {
     const[currentPage,setCurrentPage] = useState("1");
     const itemsPerPage = 6;
     
-    const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete} = useGlobalContext();
+    const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete,loading,setLoading} = useGlobalContext();
     const[isDeleting,setIsDeleting] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
+    const[postFilter,setPostFilter] = useState('');
 
 
     useEffect(()=>{
         const fetchPosts = async () =>{
+            setLoading(true);
             try{
                 const {data} = await axios.get("/api/posts");
                 // Pagination
@@ -32,8 +35,10 @@ export default function Admin() {
                 setPages(newPages);
                 setPosts(data);
                 setCurrentPosts(data.slice(0,itemsPerPage));
+                setLoading(false);
             }catch(error){
                 console.log("Error fetching posts.");
+                setLoading(false);
             }
         }
         fetchPosts();
@@ -54,11 +59,12 @@ export default function Admin() {
             setCurrentPosts(posts.slice(startpoint,endpoint));
         }
         
-    },[currentPage,posts])
+    },[currentPage,posts,postFilter])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
             const deletePost = async () =>{
+                setLoading(true);
                 try{
                     let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
                     await axios.delete(`/api/posts/${postToDelete._id}`,config);
@@ -66,8 +72,10 @@ export default function Admin() {
                     setIsDeleting(false);
                     setIsConfirmDelete(false);
                     setPostToDelete(null);
+                    setLoading(false);
                 }catch(error){
                     console.log(error);
+                    setLoading(false);
                 }
             }
             deletePost();
@@ -81,24 +89,54 @@ export default function Admin() {
         setPostToDelete(post);
     }
 
+    const sortPosts = (criteria) => {
+        let sortedPosts = posts;
+        if(criteria==="title"){
+            sortedPosts = posts.sort((a,b)=>(a.title> b.title) ? 1 : -1);
+        }else if(criteria==="tags"){
+            sortedPosts = posts.sort((a,b)=>(a.tags[0] > b.tags[0]) ? 1 : -1);
+        }else if(criteria==="date"){
+            sortedPosts = posts.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1);
+        }
+
+        setPosts(sortedPosts);
+        if(currentPage!="0"){
+            setCurrentPage("1");
+        }
+        setPostFilter(criteria);
+        
+    }
+    const handleFilterSelect = (e) => {
+        sortPosts(e.target.value);
+    }
     return (
-        <div className="relative grid place-items-center w-full bg-gray-600 py-10 rounded-md">
-            <h1 className="text-gray-100 mb-5">Admin Dashboard</h1>
-            <p className="text-gray-200">Add new posts and edit or remove old posts!</p>
+        <div className="grid place-items-center w-full dark:bg-gray-600 py-10 rounded-md">
+            <h1 className="mb-5">Admin Dashboard</h1>
+            <p>Add new posts and edit or remove old posts!</p>
             
             {/* All Posts Container */}
-            <div className="p-10">
-                <h2 className="text-gray-100">All Posts</h2>
+            <div className="p-10 w-full">
+                <h2>Posts</h2>
                 
-                <div className="grid grid-cols-admin-table mb-1 rounded-md text-gray-100">
-                    <div className="lg:w-4/5 p-2">Title</div>
-                    <div className="lg:w-4/5 p-2">Tags</div>
-                    <div className="lg:w-4/5 p-2">Date</div>
-                    <div className="lg:w-4/5 p-2">Edit/Remove Post</div>       
+                {loading? <Loader/> : currentPosts.length === 0 ? <h2>No Posts Found</h2> : (<>
+                <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
+                    <p>Filter by: </p>
+                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect}>
+                        <option value="" hidden></option>
+                        <option value="title">title</option>
+                        <option value="tags">tags</option>
+                        <option value="date">date</option>
+                    </select>
+                </div>
+                <div className="hidden sm:grid grid-cols-admin-table  sm:mb-1 rounded-md dark:text-gray-100 text-center">
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("title")}>Title</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("tags")}>Tags</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("date")}>Date</div>
+                    <div className="lg:w-4/5 p-2 font-semibold">Edit/Remove Post</div>       
                 </div>
 
                 <div className="grid grid-flow-row">
-                    {currentPosts.length === 0 ? <h2>No Posts Found</h2> : 
+                    { 
                     currentPosts.map((post)=>{
                         return(
                             <AdminRow key={post._id} post={post} handleDeletePost={handleDeletePost}/>
@@ -122,10 +160,11 @@ export default function Admin() {
                     <button className="mt-5 w-40 btn-primary" onClick={()=>setCurrentPage("0")}>see all posts</button>}
                     </div>
                     )}
-                </div>
-                {/* Alert used to confirm deleting a post */}
-                {isAlertShowing && <Alert postName={postToDelete.title}/>}
+                </div></>)}
+                
             </div>
+            {/* Alert used to confirm deleting a post */}
+            {isAlertShowing && <Alert postName={postToDelete.title}/>}
         </div>
     )
 }

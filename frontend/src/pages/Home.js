@@ -16,9 +16,44 @@ export default function Home() {
 
     useEffect(()=> {
         // Load Posts
+        const loadPosts = async () =>{
+          try{
+            setLoading(true);
+            let { data } = await axios.get("/api/posts");
+            data = data.sort((a,b)=>(a.createdAt < b.createdAt) ? 1 : -1);
+            if(filterCategory){
+              data = data.filter((post)=>post.tags.includes(filterCategory));
+            }
+            if(data.length>maxPosts){
+              setPosts(data.slice(0,maxPosts));
+            }else{
+              setPosts(data);
+            }
+            setLoading(false);
+          }catch(error){
+            console.log("There was an error loading the posts.");
+            setLoading(false);
+          }
+        }
         loadPosts();
         
-        // Load Posts  
+        // Load Old Posts  
+        const loadOldPosts = async () =>{
+          setLoading(true);
+          try{
+            let { data } = await axios.get("/api/posts");
+            data = data.sort((a,b)=>(a.createdAt < b.createdAt) ? 1 : -1);
+            if(data.length>maxPosts){
+              let endpoint = maxPosts+4;
+              if(endpoint>data.length) endpoint = data.length;
+              setOldPosts(data.slice(maxPosts,endpoint));
+            }
+            setLoading(false);
+          }catch(error){
+            console.log("There was an error loading the old posts.");
+            setLoading(false);
+          }
+        }
         loadOldPosts();
         
       },[filterCategory])
@@ -32,41 +67,8 @@ export default function Home() {
       }
     },[location])
 
-    const loadPosts = async () =>{
-      try{
-        setLoading(true);
-        let { data } = await axios.get("/api/posts");
-        data = data.sort((a,b)=>(a.createdAt < b.createdAt) ? 1 : -1);
-        if(filterCategory){
-          data = data.filter((post)=>post.tags.includes(filterCategory));
-        }
-        if(data.length>maxPosts){
-          setPosts(data.slice(0,maxPosts));
-        }else{
-          setPosts(data);
-        }
-        setLoading(false);
-      }catch(error){
-        console.log("There was an error loading the posts.");
-        setLoading(false);
-      }
-    }
-    const loadOldPosts = async () =>{
-      setLoading(true);
-      try{
-        let { data } = await axios.get("/api/posts");
-        data = data.sort((a,b)=>(a.createdAt < b.createdAt) ? 1 : -1);
-        if(data.length>maxPosts){
-          let endpoint = maxPosts+4;
-          if(endpoint>data.length) endpoint = data.length;
-          setOldPosts(data.slice(maxPosts,endpoint));
-        }
-        setLoading(false);
-      }catch(error){
-        console.log("There was an error loading the old posts.");
-        setLoading(false);
-      }
-    }
+    
+    
     return (
         <div>
             <div className="grid place-items-center py-12">

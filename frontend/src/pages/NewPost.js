@@ -31,6 +31,7 @@ export default function NewPost() {
             setPreviewSource(selectedImage.url);
         }
     },[selectedImage])
+    
     const previewFile = (file) => {
         console.log(file);
         const reader = new FileReader();

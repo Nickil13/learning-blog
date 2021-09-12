@@ -8,11 +8,11 @@ export default function AdminRow({post, handleDeletePost}) {
     const history = useHistory();
     return (
         // Row
-        <div key={post._id} className="grid place-items-center w-4/5 sm:w-full mx-auto sm:grid-cols-admin-table bg-gray-300 dark:bg-purple-200 mb-1 rounded-md">
+        <div key={post._id} className="grid place-items-center w-4/5 sm:w-full mx-auto py-2 sm:grid-cols-admin-table bg-gray-300 dark:bg-gray-700 mb-2 rounded-md">
                                 
         {/* First Column - Title */}
-        <div className="lg:w-4/5 p-2">
-            <Link to={`/posts/${post._id}`} className="hover:underline">{post.title}
+        <div className="lg:w-4/5 p-2 text-center text-xl sm:text-base dark:text-gray-100">
+            <Link to={`/posts/${post._id}`} className="hover:underline ">{post.title}
             </Link>
         </div>
         
@@ -20,19 +20,19 @@ export default function AdminRow({post, handleDeletePost}) {
         <div className="lg:w-4/5 p-2">
             <ul>
                 {post.tags.map((tag,index)=>{
-                    return <li key={index} className="text-purple-600 p-1">#{tag}</li>
+                    return <li key={index} className="text-purple-600 dark:text-purple-300 p-1">#{tag}</li>
                 })}
             </ul>
         </div>
 
         {/* Third Column - Date */}
         
-        <div className="lg:w-4/5 p-2">
+        <div className="lg:w-4/5 p-2 dark:text-gray-300">
             <Moment format="MMM DD YYYY" date={post.createdAt}/>
         </div>
         
         {/* Fourth Column - Date */}
-        <div className="lg:w-4/5 p-2">
+        <div className="flex lg:w-4/5 p-2">
             <button className="btn-primary mr-2" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-3xl"/></button>
             <button className="btn-primary" onClick={()=>handleDeletePost(post)}><HiOutlineDocumentRemove className="text-3xl"/></button>
         </div>
