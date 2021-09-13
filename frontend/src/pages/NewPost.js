@@ -125,7 +125,7 @@ export default function NewPost() {
                 {selectorShowing && <ImageSelector onSetSelected={setSelectedImage} setSelectorShowing={setSelectorShowing}/>}
 
                 {/* Tag Inputs */}
-                <div id="tag-box" className="flex flex-col  items-center p-5 gap-2 w-full">
+                <div className="flex flex-col items-center p-5 gap-2 w-full">
                     <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="tags">Tags</label>
                     <div className="flex flex-wrap gap-5 justify-center">
                         <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>

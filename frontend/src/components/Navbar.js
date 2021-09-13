@@ -75,25 +75,25 @@ export default function Navbar() {
     }
     return (
     <header className="h-12 transparent">
-        <nav className={`fixed grid grid-cols-2 right-0 h-screen place-items-center justify-center gap-5 z-10 ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
+        <nav className={`fixed grid grid-cols-2 right-0 h-screen place-items-center justify-center gap-5 z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
           {/* Arrow Slide Bar */}
-          <div>
+          <div className="pointer-events-auto">
             <div className="bg-black bg-opacity-60 rounded-full p-2 shadow-md">
             {isSidebarOpen ? <FiArrowRightCircle onClick={()=>setIsSidebarOpen(false)} className="nav-icon"/> :
             <FiArrowLeftCircle onClick={()=>setIsSidebarOpen(true)} className="nav-icon"/>
             }
             </div>
             {isLoggedIn &&
-            <ul className="bg-black bg-opacity-60 rounded-full p-2 shadow-md absolute bottom-5">
+            <ul className="bg-black bg-opacity-60 rounded-full p-2 shadow-md absolute bottom-5 pointer-events-auto">
               <li onClick={()=>history.push("/admin/new-post")}><AiOutlineFileAdd className="nav-icon mb-5" /></li>
               <li id="user-icon"onClick={handleMenuClick}><AiOutlineUser className="nav-icon"/></li>
             </ul>}
           </div>
           {/* Nav Icons */}
-          <div className="relative grid bg-black bg-opacity-50" ref={navContainer}>
+          <div className="relative grid bg-black bg-opacity-50 pointer-events-auto" ref={navContainer}>
             <DarkModeToggle/>
           
-          <ul className="flex flex-col justify-center grid-start-2 gap-5  h-screen px-5">
+          <ul className="flex flex-col justify-center grid-start-2 gap-5  h-screen px-5 pointer-events-auto">
             <li>
               <GiHouse className="nav-icon" onClick={()=>handleNavClick("home")}/>
             </li>

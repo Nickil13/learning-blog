@@ -6,6 +6,7 @@ import ImageInput from '../components/ImageInput';
 import Message from '../components/Message';
 import {useGlobalContext} from '../context';
 import ImageSelector from '../components/ImageSelector';
+import Loader from '../components/Loader';
 import {tagData} from '../data';
 
 export default function EditPost() {
@@ -18,11 +19,8 @@ export default function EditPost() {
     const[tag3,setTag3] = useState("");
     const[text,setText] = useState("");
     const[currentTags,setCurrentTags] = useState(1);
-    // const[message,setMessage] = useState("");
-    // const[messageType,setMessageType] = useState("default");
-    const{userInfo,updateMessage,message,messageType,messageLink} = useGlobalContext();
+    const{userInfo,updateMessage,message,messageType,messageLink,loading,setLoading} = useGlobalContext();
     const {id} = useParams();
-    const imageTypes = ['image/png','image/jpeg'];
     const[selectedImage,setSelectedImage] = useState(null);
     const[selectorShowing,setSelectorShowing] = useState(false);
     const[imageSource,setImageSource] = useState('');
@@ -30,11 +28,14 @@ export default function EditPost() {
    
     useEffect(()=>{
         const loadPost = async () =>{ 
+            setLoading(true);
             try{
                 const {data} = await axios.get(`/api/posts/${id}`);
                 setPost(data);
+                setLoading(false);
             }catch(error){
                 console.log(error);
+                setLoading(false);
             }
         }
         loadPost();
@@ -56,7 +57,6 @@ export default function EditPost() {
             setImageName(post.image);
             setImagePath(post.image);
             setText(post.text);
-
         }
         
     },[post])
@@ -106,13 +106,7 @@ export default function EditPost() {
             updateMessage("No file to upload","error");
         }
     }
-    // const changeHandler = (e) => {
-    //     let selectedFile = e.target.files[0];
-    //     if(selectedFile && imageTypes.includes(selectedFile.type)){
-    //         console.log(selectedFile);
-    //     }
-    // }
-
+    
     const handleSubmit = async (e)=>{
         e.preventDefault();
         let tags = [tag1,tag2,tag3];
@@ -130,21 +124,21 @@ export default function EditPost() {
 
             try{
                 const {data} = await axios.put("/api/posts",{id,title,imagePath,newTags,text},config);
-                console.log(data);
-                updateMessage(`Successfully edited [${title}]`,"success");
-                // setMessage(`Successfully edited [${title}]`);
-                // setMessageType("success");
+                updateMessage(`Successfully edited [${title}]`,"success",`/posts/${data._id}`);
             }catch(error){
                 console.log(error);
             }
         }else{
             updateMessage("Fields are not filled in.","error");
-            // setMessage("Fields are not filled in.")
-            // setMessageType("error");
         }
         
     }
-    
+    if(loading){
+        return(
+            <Loader/>
+        )
+    }
+
     if(!post){
         return(
             <div className="grid md:grid-cols-2 place-items-center">
@@ -152,6 +146,7 @@ export default function EditPost() {
             </div>
         )
     }
+    
     return (
         <div className="grid md:grid-cols-2 place-items-center">
                 <h1 className="mb-10 md:col-span-2">Edit Post: {post.title}</h1>
@@ -161,7 +156,7 @@ export default function EditPost() {
             <form className="grid md:col-start-2 w-5/6" onSubmit={handleSubmit}>
                 {/* Title Input */}
                 <div className="flex flex-col md:flex-row justify-between items-center p-5">
-                    <label className="mr-5 mb-3 dark:text-gray-400" htmlFor="title">Title</label>
+                <label className="mb-3 md:mb-0 md:mr-5 dark:text-gray-400 font-semibold" htmlFor="title">Title</label>
                     <input className="post-input" type="text" id="title" placeholder="My Adventure" value={title} onChange={(e)=>setTitle(e.target.value)}/>
                 </div>
                 {/* Image Input */}
@@ -172,8 +167,8 @@ export default function EditPost() {
                 {selectorShowing && <ImageSelector onSetSelected={setSelectedImage} setSelectorShowing={setSelectorShowing}/>}
 
                 {/* Tag Inputs */}
-                <div className="flex flex-col md:flex-row justify-between items-center p-5 gap-2">
-                    <label className="mr-5 mb-3 dark:text-gray-400" htmlFor="tags">Tags</label>
+                <div className="flex flex-col items-center p-5 gap-2 w-full">
+                <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="tags">Tags</label>
                     <div className="flex flex-wrap gap-5 justify-center">
                         <ComboBox name="tag1" list={tagData} value={tag1} onChange={(e)=>setTag1(e.target.value)}/>
                         {currentTags>1 && <ComboBox name="tag2" list={tagData} value={tag2} onChange={(e)=>setTag2(e.target.value)}/>}
@@ -184,7 +179,7 @@ export default function EditPost() {
                 </div>
                 {/* Text Input */}
                 <div className="flex flex-col justify-between items-center p-5 w-full">
-                    <label className="mr-5 mb-3 dark:text-gray-400" htmlFor="text">Text</label>
+                <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="text">Text</label>
                     <textarea className="w-full resize-none h-40 post-input" type="text" id="text" placeholder="This the start of my adventure." value={text} onChange={(e)=>setText(e.target.value)}/>
                 </div>
                 <button type="submit" className="btn-primary w-3/5 mx-auto">Edit Post</button>
