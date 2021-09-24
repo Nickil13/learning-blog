@@ -35,7 +35,8 @@ router.get('/', async (req, res)=>{
     try{ 
         const images =await cloudinary.api.resources({
             type: 'upload',
-            prefix: 'blog'
+            prefix: 'blog',
+            max_results: 20
         });
         res.json(images);
     }catch(error){

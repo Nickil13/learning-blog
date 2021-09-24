@@ -1,6 +1,5 @@
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
-
 import AdminRow from '../components/AdminRow';
 import Alert from '../components/Alert';
 import Loader from '../components/Loader';
@@ -12,19 +11,18 @@ export default function Admin() {
     const[currentPosts,setCurrentPosts] = useState([]);
     const[currentPage,setCurrentPage] = useState("1");
     const itemsPerPage = 6;
-    
     const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete,loading,setLoading} = useGlobalContext();
     const[isDeleting,setIsDeleting] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
-    const[postFilter,setPostFilter] = useState('');
 
 
     useEffect(()=>{
         const fetchPosts = async () =>{
-            setLoading(true);
             try{
-                const {data} = await axios.get("/api/posts");
-                // Pagination
+                setLoading(true);
+                const {data} = await axios.get(`/api/posts`);
+                
+                // // Pagination
                 let pagesNeeded = Math.ceil(data.length/itemsPerPage);
                 let newPages = [];
                 if(pagesNeeded>1){
@@ -35,7 +33,9 @@ export default function Admin() {
                 setPages(newPages);
                 setPosts(data);
                 setCurrentPosts(data.slice(0,itemsPerPage));
+                
                 setLoading(false);
+                
             }catch(error){
                 console.log("Error fetching posts.");
                 setLoading(false);
@@ -59,7 +59,7 @@ export default function Admin() {
             setCurrentPosts(posts.slice(startpoint,endpoint));
         }
         
-    },[currentPage,posts,postFilter])
+    },[currentPage,posts])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
@@ -90,20 +90,19 @@ export default function Admin() {
     }
 
     const sortPosts = (criteria) => {
-        let sortedPosts = posts;
+        let sortedPosts = [...posts];
         if(criteria==="title"){
-            sortedPosts = posts.sort((a,b)=>(a.title> b.title) ? 1 : -1);
+            sortedPosts = sortedPosts.sort((a,b)=>(a.title> b.title) ? 1 : -1);
         }else if(criteria==="tags"){
-            sortedPosts = posts.sort((a,b)=>(a.tags[0] > b.tags[0]) ? 1 : -1);
+            sortedPosts = sortedPosts.sort((a,b)=>(a.tags[0] > b.tags[0]) ? 1 : -1);
         }else if(criteria==="date"){
-            sortedPosts = posts.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1);
+            sortedPosts = sortedPosts.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1);
         }
 
         setPosts(sortedPosts);
         if(currentPage!="0"){
             setCurrentPage("1");
         }
-        setPostFilter(criteria);
         
     }
     const handleFilterSelect = (e) => {
@@ -115,7 +114,7 @@ export default function Admin() {
             <p>Add new posts and edit or remove old posts!</p>
             
             {/* All Posts Container */}
-            <div className="p-10 w-full">
+            <div className="p-10 w-full max-w-5xl">
                 <h2 className="border-b-2 pb-2 m-2">Posts</h2>
                 
                 {loading? <Loader/> : currentPosts.length === 0 ? <h2>No Posts Found</h2> : (<>

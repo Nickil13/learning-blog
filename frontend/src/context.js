@@ -6,7 +6,6 @@ export const AppProvider = ({children}) => {
     const[theme,setTheme] = useState('light');
     const[isLoggedIn,setIsLoggedIn] = useState(false);
     const[userInfo,setUserInfo] = useState({});
-    const[loginMessage,setLoginMessage] = useState("");
     const[isConfirmDelete,setIsConfirmDelete] = useState(false);
     const[isAlertShowing,setIsAlertShowing] = useState(false);
     const[loading,setLoading] = useState(false);
@@ -64,10 +63,10 @@ export const AppProvider = ({children}) => {
             setIsLoggedIn(true);
             //save user & token to local storage
             localStorage.setItem('userInfo',JSON.stringify(data));
-            setLoginMessage("Logged in!");
+            setMessage("");
         }catch(error){
             console.log(error);
-            setLoginMessage("Error logging in");
+            setMessage("Error logging in");
         }
         
         
@@ -84,7 +83,6 @@ export const AppProvider = ({children}) => {
     {{
         isLoggedIn,
         login,
-        loginMessage,
         userInfo,
         logout,
         confirmDelete,

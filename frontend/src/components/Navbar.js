@@ -4,7 +4,7 @@ import {FiArrowLeftCircle, FiArrowRightCircle} from 'react-icons/fi';
 import {AiOutlineFileAdd, AiOutlineUser} from 'react-icons/ai';
 import DarkModeToggle from './DarkModeToggle';
 import { useGlobalContext } from '../context';
-import {GiCat, GiAirplaneDeparture, GiGamepad, GiCoffeeCup, GiHouse, GiHearts} from 'react-icons/gi';
+import {GiStack, GiCat, GiAirplaneDeparture, GiGamepad, GiCoffeeCup, GiHouse, GiHearts} from 'react-icons/gi';
 import {BsCodeSlash} from 'react-icons/bs';
 
 export default function Navbar() {
@@ -35,7 +35,7 @@ export default function Navbar() {
       if(category==="home"){
         history.push("/");
       }else{
-        history.push(`/?category=${category}`)
+        history.push(`/posts/?category=${category}`)
       }
       
       //Scroll to top of page
@@ -97,6 +97,7 @@ export default function Navbar() {
             <li>
               <GiHouse className="nav-icon" onClick={()=>handleNavClick("home")}/>
             </li>
+            <li><GiStack className="nav-icon" onClick={()=>handleNavClick("all")}/></li>
             <li><GiCat className="nav-icon" onClick={()=>handleNavClick("animals")}/></li>
             <li>
               <GiCoffeeCup className="nav-icon" onClick={()=>handleNavClick("food")}/>

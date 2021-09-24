@@ -19,12 +19,15 @@ export default function EditPost() {
     const[tag3,setTag3] = useState("");
     const[text,setText] = useState("");
     const[currentTags,setCurrentTags] = useState(1);
-    const{userInfo,updateMessage,message,messageType,messageLink,loading,setLoading} = useGlobalContext();
+    const{userInfo,loading,setLoading} = useGlobalContext();
     const {id} = useParams();
     const[selectedImage,setSelectedImage] = useState(null);
     const[selectorShowing,setSelectorShowing] = useState(false);
     const[imageSource,setImageSource] = useState('');
     const[uploadedFile,setUploadedFile] = useState(null);
+    const[message,setMessage] = useState('');
+    const[messageType,setMessageType] = useState('default');
+    const[messageLink,setMessageLink] = useState('');
    
     useEffect(()=>{
         const loadPost = async () =>{ 
@@ -43,20 +46,25 @@ export default function EditPost() {
     
     useEffect(()=>{
         if(post){
-            setTitle(post.title);
+            const {image,title,tags,text} = post;
+            let name = '';
+            setTitle(title);
             
-            setCurrentTags(post.tags.length);
-            setTag1(post.tags[0])
-            if(post.tags.length>1){
-                setTag2(post.tags[1]);
+            setCurrentTags(tags.length);
+            setTag1(tags[0])
+            if(tags.length>1){
+                setTag2(tags[1]);
             }
-            if(post.tags.length>2){
-                setTag3(post.tags[2]);
+            if(tags.length>2){
+                setTag3(tags[2]);
             }
-            
-            setImageName(post.image);
-            setImagePath(post.image);
-            setText(post.text);
+            if(image.includes("cloudinary")){
+                let list = image.split("/");
+                name = list[list.length-1];
+            }
+            setImageName(name);
+            setImagePath(image);
+            setText(text);
         }
         
     },[post])
@@ -76,12 +84,16 @@ export default function EditPost() {
             const reader = new FileReader();
             reader.readAsDataURL(uploadedFile);
             reader.onloadend = () => {
-                setImageSource(reader.result);
-                
+                setImageSource(reader.result);   
             }
         }
     },[uploadedFile])
 
+    const updateMessage = (message,type,link) =>{
+        setMessage(message);
+        if(type) setMessageType(type);
+        if(link) setMessageLink(link);
+    }
     const uploadImage = async(e) => {
     
         if(imageSource){
@@ -123,7 +135,7 @@ export default function EditPost() {
             let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
 
             try{
-                const {data} = await axios.put("/api/posts",{id,title,imagePath,newTags,text},config);
+                const {data} = await axios.put("/api/posts",{id,title,image: imagePath,newTags,text},config);
                 updateMessage(`Successfully edited [${title}]`,"success",`/posts/${data._id}`);
             }catch(error){
                 console.log(error);
@@ -155,7 +167,7 @@ export default function EditPost() {
             </div>
             <form className="grid md:col-start-2 w-5/6" onSubmit={handleSubmit}>
                 {/* Title Input */}
-                <div className="flex flex-col md:flex-row justify-between items-center p-5">
+                <div className="flex flex-col md:flex-row items-center p-5">
                 <label className="mb-3 md:mb-0 md:mr-5 dark:text-gray-400 font-semibold" htmlFor="title">Title</label>
                     <input className="post-input" type="text" id="title" placeholder="My Adventure" value={title} onChange={(e)=>setTitle(e.target.value)}/>
                 </div>

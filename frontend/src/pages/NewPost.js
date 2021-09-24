@@ -14,12 +14,14 @@ export default function NewPost() {
     const[tags,setTags] = useState([]);
     const[text,setText] = useState("");
     const[currentTags,setCurrentTags] = useState(1);
-    const{userInfo,updateMessage,message,messageType,messageLink} = useGlobalContext();
+    const{userInfo} = useGlobalContext();
     const[selectedImage,setSelectedImage] = useState(null);
     const[selectorShowing,setSelectorShowing] = useState(false);
     const[imageSource,setImageSource] = useState('');
     const[uploadedFile,setUploadedFile] = useState(null);
-
+    const[message,setMessage] = useState('');
+    const[messageType,setMessageType] = useState('default');
+    const[messageLink,setMessageLink] = useState('');
     
     useEffect(()=>{
         if(selectedImage){
@@ -41,6 +43,12 @@ export default function NewPost() {
             }
         }
     },[uploadedFile])
+
+    const updateMessage = (message,type,link) =>{
+        setMessage(message);
+        if(type) setMessageType(type);
+        if(link) setMessageLink(link);
+    }
 
     const uploadImage = async(e) => {
     

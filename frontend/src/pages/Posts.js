@@ -2,52 +2,41 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import Post from '../components/Post';
-import Card from '../components/Card';
 import Loader from '../components/Loader';
 
-export default function Home() {
+export default function Posts() {
     const[posts,setPosts] = useState([]);
-    const[oldPosts,setOldPosts] = useState([]);
+    const[nextCursor,setNextCursor] = useState(null);
     const[filterCategory,setFilterCategory] = useState("");
     const[loading,setLoading] = useState(false);
+    const[loadingMore,setLoadingMore] = useState(false);
     const location = useLocation();
-    // const maxPosts = 8;
 
     useEffect(()=> {
         // Load Posts
-        const loadPosts = async () =>{
+        const fetchPosts = async () =>{
           try{
             setLoading(true);
-            let response = await axios.get("/api/posts");
+            const params= new URLSearchParams();
+        
+            if(filterCategory && filterCategory!=="all"){
+              params.append('filter_category',filterCategory);
+            }
+            
+            let response = await axios.get(`/api/posts?${params}`);
+            ;
             let data = response.data.posts;
         
             setPosts(data);
+            setNextCursor(response.data.next_cursor);
+            
             setLoading(false);
           }catch(error){
             console.log("There was an error loading the posts.");
             setLoading(false);
           }
         }
-        loadPosts();
-        
-        // Load Old Posts  
-        // const loadOldPosts = async () =>{
-        //   setLoading(true);
-        //   try{
-        //     let { data } = await axios.get("/api/posts");
-        //     data = data.sort((a,b)=>(a.createdAt < b.createdAt) ? 1 : -1);
-        //     if(data.length>maxPosts){
-        //       let endpoint = maxPosts+4;
-        //       if(endpoint>data.length) endpoint = data.length;
-        //       setOldPosts(data.slice(maxPosts,endpoint));
-        //     }
-        //     setLoading(false);
-        //   }catch(error){
-        //     console.log("There was an error loading the old posts.");
-        //     setLoading(false);
-        //   }
-        // }
-        // loadOldPosts();
+        fetchPosts();
         
       },[filterCategory])
     
@@ -60,8 +49,35 @@ export default function Home() {
       }
     },[location])
 
-    
-    
+    const handleLoadMore = () =>{
+        
+        const fetchMorePosts = async (nextCursor) =>{
+            try{
+              setLoadingMore(true);
+              const params = new URLSearchParams();
+              if(nextCursor){
+                console.log(nextCursor);
+                  params.append('next_cursor', nextCursor);
+              }
+              if(filterCategory && filterCategory!=="all"){
+                params.append('filter_category',filterCategory);
+              }
+            
+             const response = await axios.get(`/api/posts?${params}`);
+            
+              setPosts([...posts,...response.data.posts]);
+            
+             
+              setNextCursor(response.data.next_cursor);
+            
+              setLoadingMore(false);
+            }catch(error){
+              console.log(error);
+              setLoadingMore(false);
+            }
+        }
+        fetchMorePosts(nextCursor);
+    }
     return (
         <div>
             <div className="grid place-items-center py-12">
@@ -88,19 +104,14 @@ export default function Home() {
               )
             })}
           </div>
-        
-        {/* Bottom Section with Older Posts */}
-        <div className="w-full border-t-2 pt-5">
-          <h2 className="text-center p-5 mb-5">Older Posts</h2>
-          {/* Older Posts List */}
-          <div className="grid auto-cols-fr md:grid-cols-2 gap-5">
-            {oldPosts.length ===0 ? <h2>No older posts</h2> :
-            oldPosts.map((post)=>{
-              return <Card key={post._id} {...post}/>
-            })}
+          <div className="grid place-items-center">
+          {loadingMore ? <h2>Loading...</h2> : nextCursor && <button className='btn-primary' onClick={()=>handleLoadMore()}>Load more</button>}
+
           </div>
-        </div>
         </div>} 
+
+        
+        
       </div>
     )
 }

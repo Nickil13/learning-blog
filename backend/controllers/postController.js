@@ -6,9 +6,45 @@ const Post = require('../models/Post');
 // @access  Public
 const getPosts = asyncHandler(async (req,res)=>{
     const posts = await Post.find({});
-    res.json(posts);
+    res.json(posts);  
 })
+// @desc    Get all posts
+// @route   GET /api/posts/admin
+// @access  Public
+const getAllPosts = asyncHandler(async (req,res)=>{
+    let limit = 8;
+    let filter = {};
 
+    if(req.query.filter_category){
+        console.log(req.query.filter_category);
+        filter = { 'tags':req.query.filter_category};
+    }
+    
+    if(req.query.next_cursor){
+        const posts = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: req.query.next_cursor}}).limit(limit);
+        
+        if(posts.length<=limit){
+            res.json({posts});
+        }else{
+            let next_cursor = posts[posts.length-1].createdAt;
+            res.json({posts,next_cursor});
+        }
+        
+    }else{
+        //First page
+        const posts = await Post.find(filter).sort({createdAt:-1}).limit(limit);
+        
+        if(posts.length<=limit){
+            res.json({posts});
+        }else{
+            let next_cursor = posts[posts.length-1].createdAt;
+            res.json({posts,next_cursor});
+        }
+       
+    }
+
+    
+})
 // @desc    Get a specific post by id
 // @route   GET /api/posts/:id
 // @access  Public
@@ -91,4 +127,6 @@ const deletePost = asyncHandler(async (req,res)=>{
     }) 
 })
 
-module.exports = {createPost, getPosts, getPostById ,updatePost, deletePost}
+
+
+module.exports = {createPost, getPosts, getPostById ,updatePost, deletePost, getAllPosts}

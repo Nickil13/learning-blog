@@ -29,7 +29,7 @@ export default function ImageInput({name, onUploadClick, handleUploadSelect, set
 
             <div className="flex items-center justify-center">
                 <label className="mr-5 mb-3 dark:text-gray-400" htmlFor="image"><FiUpload className="cursor-pointer hover:text-purple-500 dark:hover:text-white text-2xl"/></label>
-                <button className="btn-primary w-20" type="button" onClick={handleUploadImage}>Upload {file && file.name}</button>
+                <button className="btn-primary" type="button" onClick={handleUploadImage}>Upload: {file && (file.name.length<=25 ? file.name : `${file.name.substring(0,25)}...`)}</button>
             </div>
             <input className="hidden" accept="image/*" type="file" id="image" placeholder="an image" onChange={handleOnChange}/>
             

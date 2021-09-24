@@ -5,7 +5,7 @@ import Message from '../components/Message';
 export default function Login() {
     const[username,setUsername] = useState("");
     const[password,setPassword] = useState("");
-    const{login, loginMessage} = useGlobalContext();
+    const{login, message} = useGlobalContext();
     
     const handleSubmit = async (e) =>{
         e.preventDefault();
@@ -14,7 +14,7 @@ export default function Login() {
     return (
         <div className="grid place-items-center max-w-lg mx-auto bg-gray-600 p-10 w-full rounded-md">
             <h1 className="text-gray-100 mb-5">Login</h1>
-            {loginMessage && <Message type="error">{loginMessage}</Message>}
+            {message && <Message type="error">{message}</Message>}
             <form className="grid w-full" onSubmit={handleSubmit}>
                 <div className="flex flex-col md:flex-row justify-between items-center py-5">
                     <label className="text-gray-100 md:mr-5 mb-3" htmlFor="username">Username</label>
