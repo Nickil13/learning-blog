@@ -2,16 +2,17 @@ const asyncHandler = require('express-async-handler');
 const Post = require('../models/Post');
 
 // @desc    Get all posts
+// @route   GET /api/posts/admin
+// @access  Private
+const getAllPosts = asyncHandler(async (req,res)=>{
+    const posts = await Post.find({});
+    res.json(posts);
+})
+
+// @desc    Get a limited amount of posts
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req,res)=>{
-    const posts = await Post.find({});
-    res.json(posts);  
-})
-// @desc    Get all posts
-// @route   GET /api/posts/admin
-// @access  Public
-const getAllPosts = asyncHandler(async (req,res)=>{
     let limit = 8;
     let filter = {};
 
@@ -23,7 +24,7 @@ const getAllPosts = asyncHandler(async (req,res)=>{
     if(req.query.next_cursor){
         const posts = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: req.query.next_cursor}}).limit(limit);
         
-        if(posts.length<=limit){
+        if(posts.length<limit){
             res.json({posts});
         }else{
             let next_cursor = posts[posts.length-1].createdAt;
@@ -33,8 +34,7 @@ const getAllPosts = asyncHandler(async (req,res)=>{
     }else{
         //First page
         const posts = await Post.find(filter).sort({createdAt:-1}).limit(limit);
-        
-        if(posts.length<=limit){
+        if(posts.length<limit){
             res.json({posts});
         }else{
             let next_cursor = posts[posts.length-1].createdAt;

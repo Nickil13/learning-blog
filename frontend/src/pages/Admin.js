@@ -15,12 +15,14 @@ export default function Admin() {
     const[isDeleting,setIsDeleting] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
 
-
+    
     useEffect(()=>{
         const fetchPosts = async () =>{
             try{
                 setLoading(true);
-                const {data} = await axios.get(`/api/posts`);
+                let config = {headers:{Authorization: `Bearer ${userInfo.token}`}};
+
+                const {data} = await axios.get(`/api/posts/admin`, config);
                 
                 // // Pagination
                 let pagesNeeded = Math.ceil(data.length/itemsPerPage);
