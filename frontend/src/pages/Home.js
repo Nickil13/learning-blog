@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import Post from '../components/Post';
 import Card from '../components/Card';
 import Loader from '../components/Loader';
@@ -8,16 +7,13 @@ import Loader from '../components/Loader';
 export default function Home() {
     const[posts,setPosts] = useState([]);
     const[oldPosts,setOldPosts] = useState([]);
-    const[filterCategory,setFilterCategory] = useState("");
     const[loading,setLoading] = useState(false);
-    const location = useLocation();
-    // const maxPosts = 8;
 
     useEffect(()=> {
         // Load Posts
         const loadPosts = async () =>{
+          setLoading(true);
           try{
-            setLoading(true);
             let response = await axios.get("/api/posts");
             let data = response.data.posts;
         
@@ -30,47 +26,27 @@ export default function Home() {
         }
         loadPosts();
         
-        // Load Old Posts  
-        // const loadOldPosts = async () =>{
-        //   setLoading(true);
-        //   try{
-        //     let { data } = await axios.get("/api/posts");
-        //     data = data.sort((a,b)=>(a.createdAt < b.createdAt) ? 1 : -1);
-        //     if(data.length>maxPosts){
-        //       let endpoint = maxPosts+4;
-        //       if(endpoint>data.length) endpoint = data.length;
-        //       setOldPosts(data.slice(maxPosts,endpoint));
-        //     }
-        //     setLoading(false);
-        //   }catch(error){
-        //     console.log("There was an error loading the old posts.");
-        //     setLoading(false);
-        //   }
-        // }
-        // loadOldPosts();
-        
-      },[filterCategory])
+        //Load Old Posts 
+        const loadOldPosts = async () =>{
+          setLoading(true);
+          try{
+            let {data}= await axios.get('/api/posts/old');
+            setOldPosts(data);
+          }catch(error){
+            console.log(error);
+            setLoading(false);
+          }
+        }
+        loadOldPosts();
+      },[])
     
-    useEffect(()=>{
-      if(location.search){
-        let category = location.search.split("=")[1];
-        setFilterCategory(category);
-      }else{
-        setFilterCategory("");
-      }
-    },[location])
 
-    
-    
+  
     return (
         <div>
             <div className="grid place-items-center py-12">
                 <h1>Learning Blog</h1>
                 <p className="py-4 max-w-sm">Welcome to my blog! I write about a variety of things, from animals, food and travel to games and code.</p>
-                {filterCategory && 
-                <p className="text-purple-400 text-2xl font-bold dark:text-purple-400">
-                  # {filterCategory}
-                  </p>}
             </div>
         {/* Main feed */}
         {loading ? 
@@ -79,8 +55,7 @@ export default function Home() {
           <div className="px-5">
             {posts.length === 0 ? 
             <div className="text-center border-double border-purple-300 border-2 p-5 m-5 mb-20">
-                <h2>No posts found with the category: {filterCategory}</h2>
-                <p>Please check back another time.</p>
+                <h2>No posts found.</h2>
             </div> : 
             posts.map((post)=>{
               return(

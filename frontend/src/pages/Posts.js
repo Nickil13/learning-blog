@@ -29,7 +29,7 @@ export default function Posts() {
         
             setPosts(data);
             setNextCursor(response.data.next_cursor);
-            console.log(response.data.next_cursor);
+      
             setLoading(false);
           }catch(error){
             console.log("There was an error loading the posts.");
@@ -56,7 +56,6 @@ export default function Posts() {
               setLoadingMore(true);
               const params = new URLSearchParams();
               if(nextCursor){
-                console.log(nextCursor);
                   params.append('next_cursor', nextCursor);
               }
               if(filterCategory && filterCategory!=="all"){

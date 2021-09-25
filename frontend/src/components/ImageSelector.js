@@ -10,7 +10,6 @@ export default function ImageSelector({onSetSelected, setSelectorShowing}) {
         const getImages = async () => {
             try{
                 const {data} = await axios.get('/api/cloudinary');
-                console.log(data.resources);
                 setImages(data.resources);
                 if(data.resources[0]){
                     setPreviewImage(data.resources[0].url);

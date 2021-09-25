@@ -24,12 +24,12 @@ function App() {
                 <Route path="/login">
                   {isLoggedIn ? <Redirect to="/admin"/> : <Login/>}
                 </Route>
-                <Route path="/admin/new-post">{!isLoggedIn ? <Redirect to="/login"/> : <NewPost/>}</Route>
-                <Route path="/admin/edit-post/:id">
-                {!isLoggedIn ? <Redirect to="/login"/> : <EditPost/>}</Route>
+                <Route path="/admin/new-post"><NewPost/></Route>
+                <Route path="/admin/edit-post/:id"><EditPost/></Route>
                 <Route path="/admin">
                   {!isLoggedIn ? <Redirect to="/login"/> : <Admin/>}
                 </Route>
+                
                 <Route path="/admin"><Admin/></Route>
                 <Route path="/posts/:id"><IndividualPost/></Route>
                 <Route path="/posts"><Posts/></Route>

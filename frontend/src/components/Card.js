@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 export default function Card({_id,title,text,image}) {
     const history = useHistory();
     return (
-        <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:max-w-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:max-w-md">
               <div className="h-60">
                 <img className="object-cover h-full w-full" src={image} alt={title} />
               </div>

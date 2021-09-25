@@ -17,7 +17,6 @@ const getPosts = asyncHandler(async (req,res)=>{
     let filter = {};
 
     if(req.query.filter_category){
-        console.log(req.query.filter_category);
         filter = { 'tags':req.query.filter_category};
     }
     
@@ -45,6 +44,7 @@ const getPosts = asyncHandler(async (req,res)=>{
 
     
 })
+
 // @desc    Get a specific post by id
 // @route   GET /api/posts/:id
 // @access  Public
@@ -127,6 +127,28 @@ const deletePost = asyncHandler(async (req,res)=>{
     }) 
 })
 
+// @desc    Get all posts
+// @route   GET /api/posts/admin
+// @access  Private
+const getOldPosts = asyncHandler(async (req,res)=>{
+    const limit = 4;
+    await Post.countDocuments().exec((error,count)=>{
+        if(error){
+            res.status(400).send("Error counting documents.");
+        }else{
+            let random = Math.floor(Math.random() * count/2);
+            Post.find({}).skip(random).limit(limit).exec((error,result)=>{
+                if(error){
+                    res.status(400).send("Error getting old posts.");
+                }else{
+                    res.json(result);
+                }
+            
+        })
+        }
+        
+        
+    });
+})
 
-
-module.exports = {createPost, getPosts, getPostById ,updatePost, deletePost, getAllPosts}
+module.exports = {createPost, getPosts, getPostById ,updatePost, deletePost, getAllPosts, getOldPosts}
