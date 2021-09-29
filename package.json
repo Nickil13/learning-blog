@@ -1,6 +1,9 @@
 {
   "name": "my-blog",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.18.0"
+  },
   "description": "A small blog to practice the MERN stack.",
   "main": "server.js",
   "dependencies": {
