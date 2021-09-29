@@ -6,7 +6,7 @@ import ImageInput from '../components/ImageInput';
 import ImageSelector from '../components/ImageSelector';
 import {tagData} from '../data';
 
-export default function Form({post, submitForm,setImage}) {
+export default function Form({post, submitForm,setImage, btnTitle}) {
     const[title,setTitle] = useState("");
     const[imageName,setImageName] = useState("default.jfif");
     const[imagePath,setImagePath] = useState("/images/default.jfif");
@@ -31,6 +31,7 @@ export default function Form({post, submitForm,setImage}) {
             let comboBoxes = document.querySelectorAll(".combo-box");
             tags.forEach((tag,index)=>{
                 comboBoxes[index].value = tag;
+                setTags(...tags, tag);
             });
             
             if(image.includes("cloudinary")){
@@ -90,7 +91,6 @@ export default function Form({post, submitForm,setImage}) {
                 updateMessage(`Uploaded image ${data.uploadedResponse.public_id}.`,'success')
                 
             }catch(error){
-                // console.log(error.response.data);
                 updateMessage("Upload failed.","error"); 
             }
         }else{
@@ -99,13 +99,14 @@ export default function Form({post, submitForm,setImage}) {
     }
 
     const handleComboSelect = (e) =>{
+        
         let comboBoxes = document.querySelectorAll(".combo-box");
         let newTags = [];
         for(let i = 0; i<comboBoxes.length;i++){
             let val = comboBoxes[i].value;
             if(val!=="none" && !newTags.includes(val)) newTags.push(val);
         }
-        setTags(newTags); 
+        setTags(newTags);
     }
 
     const handleSubmit =(e) =>{
@@ -133,8 +134,8 @@ export default function Form({post, submitForm,setImage}) {
                     <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="tags">Tags</label>
                     <div className="flex flex-wrap gap-5 justify-center">
                         <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>
-                        {currentTags <1 && <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>}
-                        {currentTags <2 && <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>}
+                        {currentTags>1 && <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>}
+                        {currentTags>2 && <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>}
                         {currentTags<3 &&
                         <button className="dark:text-white" type="button" onClick={()=>setCurrentTags(currentTags+1)}>+</button>}
                     </div>
@@ -146,7 +147,7 @@ export default function Form({post, submitForm,setImage}) {
                     <textarea className="p-3 w-full resize-none h-40 post-input" type="text" id="text" placeholder="This the start of my adventure." value={text} onChange={(e)=>setText(e.target.value)}/>
                 </div>
 
-                <button type="submit" className="btn-primary w-3/5 mx-auto">Create Post</button>
+                <button type="submit" className="btn-primary w-3/5 mx-auto">{btnTitle}</button>
                 {message && <Message type={messageType} link={messageLink}>{message}</Message>}
             </form>
     )

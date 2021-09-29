@@ -1,12 +1,19 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('../models/Post');
 
-// @desc    Get all posts
+// @desc    Get paginated posts
 // @route   GET /api/posts/admin
 // @access  Private
 const getAllPosts = asyncHandler(async (req,res)=>{
-    const posts = await Post.find({});
-    res.json(posts);
+    const pageSize = 8;
+    const page = Number(req.query.pageNumber) || 1;
+
+    //sort criteria
+
+    const count = await Post.countDocuments({});
+    const posts = await Post.find({}).limit(pageSize).skip(pageSize * (page-1));
+
+    res.json({posts, page, pages: Math.ceil(count/pageSize)});
 })
 
 // @desc    Get a limited amount of posts
@@ -67,9 +74,6 @@ const createPost = asyncHandler(async (req, res) => {
     //Check if an existing post has the same title or image (not including the default)
     const postTitleExists = await Post.findOne({title});
     if(postTitleExists) return res.status(400).json({message: "Have a post with that title already!"});
-
-    const postImageExists = await Post.findOne({image});
-    if(postImageExists && image!="/images/default.jfif") return res.status(400).json({message: "Have a post with that image already!"});
 
     const post = new Post({
         title,

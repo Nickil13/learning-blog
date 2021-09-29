@@ -37,8 +37,7 @@ export default function EditPost() {
         if(type) setMessageType(type);
         if(link) setMessageLink(link);
     }
-    const submitEditForm = async (tags,title,text) =>{
-        console.log(tags,title,text);
+    const submitEditForm = async (title, tags, text) =>{
         if(title && tags.length>0 && text){
             
             let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
@@ -55,25 +54,22 @@ export default function EditPost() {
     }
 
 
-    if(!post){
-        return(
-            <div className="grid md:grid-cols-2 place-items-center">
-                <h1>Can't find the post you want to edit.</h1>
-            </div>
-        )
-    }
     
     return (
-           
+        <>{loading ? <h1>Loading post to edit...</h1> : !post ? 
+            <div className="grid md:grid-cols-2 place-items-center">
+            <h1>Can't find the post you want to edit.</h1>
+        </div> :
         <div className="grid md:grid-cols-2 place-items-center">
             <h1 className="mb-10 md:col-span-2">Edit Post: {post.title}</h1>
             <div className="md:col-start-1 h-full">
                  <img className="object-cover h-full" src={image} onError={(e)=>{e.target.onerror =null; e.target.src="/images/default.jfif"}} alt="default" />
             </div>
-            <Form post={post} submitForm={submitEditForm} setImage={setImage}/>
+            <Form post={post} btnTitle={'Edit Post'} submitForm={submitEditForm} setImage={setImage}/>
             <div className="md:col-span-2">
                 {loading ? <p>loading...</p> : message && <Message type={messageType} link={messageLink}>{message}</Message>}
             </div>
-        </div>
+        </div>}
+        </>
     )
 }

@@ -1,14 +1,11 @@
-const express = require('express');
 const asyncHandler = require('express-async-handler');
 const generateToken = require('../utils/generateToken');
-const router = express.Router();
 const User = require('../models/User');
-
 
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Public
-router.get("/", async (req,res)=>{
+const getUsers = asyncHandler(async (req,res)=>{
     const users = await User.find({});
     res.json(users);
 })
@@ -16,7 +13,7 @@ router.get("/", async (req,res)=>{
 // @desc    Login & get token
 // @route   POST /api/users/login
 // @access  Public
-router.post("/login", asyncHandler( async (req,res)=>{
+const login = asyncHandler( async (req,res)=>{
     const {username, password} = req.body;
 
     const user = await User.findOne({username});
@@ -32,13 +29,12 @@ router.post("/login", asyncHandler( async (req,res)=>{
     }
     
     
-}))
-
+})
 
 // @desc    Create a user
 // @route   POST /api/users
 // @access  Public
-router.post("/", async (req,res)=>{
+const registerUser = asyncHandler(async (req,res)=>{
     const { username, password} = req.body;
 
     const userExists = await User.findOne({username});
@@ -47,10 +43,11 @@ router.post("/", async (req,res)=>{
         res.status(400);
         throw new Error("User already exists.");
     }
-
+    
     const user = new User({
         username,
-        password
+        password,
+        
     });
 
     try{
@@ -63,6 +60,4 @@ router.post("/", async (req,res)=>{
 })
 
 
-
-
-module.exports = router;
+module.exports = {getUsers, login, registerUser};

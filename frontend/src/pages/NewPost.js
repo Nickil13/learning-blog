@@ -54,7 +54,7 @@ export default function NewPost() {
             <div className="md:col-start-1 h-60 md:h-5/6 w-full max-w-lg md:px-5 md:pb-5">
                 <img className="object-cover w-full h-full" src={image} onError={(e)=>{e.target.onerror =null; e.target.src="/images/default.jfif"}} alt="default"/>
             </div>
-            <Form submitForm={submitForm} setImage={setImage}/>
+            <Form btnTitle={'Create Post'} submitForm={submitForm} setImage={setImage}/>
             <div className="md:col-span-2">
             {loading ? <p>loading...</p> : message && <Message type={messageType} link={messageLink}>{message}</Message>}
             </div>

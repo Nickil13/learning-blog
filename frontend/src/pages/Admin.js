@@ -4,64 +4,41 @@ import AdminRow from '../components/AdminRow';
 import Alert from '../components/Alert';
 import Loader from '../components/Loader';
 import { useGlobalContext} from '../context';
+import Pagination from '../components/Pagination';
+import { useParams, useHistory } from 'react-router';
 
 export default function Admin() {
     const[posts,setPosts] = useState([]);
-    const[pages,setPages]= useState([]);
-    const[currentPosts,setCurrentPosts] = useState([]);
-    const[currentPage,setCurrentPage] = useState("1");
-    const itemsPerPage = 6;
+    const {pageNumber} = useParams() || 1;
+    const[pages,setPages]= useState(1);
+    const[page,setPage] = useState(1);
     const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete,loading,setLoading} = useGlobalContext();
     const[isDeleting,setIsDeleting] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
+    const history = useHistory();
 
-    
     useEffect(()=>{
         const fetchPosts = async () =>{
+            setLoading(true);
             try{
-                setLoading(true);
+                
                 let config = {headers:{Authorization: `Bearer ${userInfo.token}`}};
 
-                const {data} = await axios.get(`/api/posts/admin`, config);
+                const {data} = await axios.get(`/api/posts/admin?pageNumber=${pageNumber}`, config);
                 
-                // // Pagination
-                let pagesNeeded = Math.ceil(data.length/itemsPerPage);
-                let newPages = [];
-                if(pagesNeeded>1){
-                    for(let i=0;i<pagesNeeded;i++){
-                        newPages.push((i+1).toString());
-                    }
-                }
-                setPages(newPages);
-                setPosts(data);
-                setCurrentPosts(data.slice(0,itemsPerPage));
-                
+                setPages(data.pages);
+                setPosts(data.posts);
+                setPage(data.page);
                 setLoading(false);
                 
             }catch(error){
                 console.log("Error fetching posts.");
+                console.error(error);
                 setLoading(false);
             }
         }
         fetchPosts();
-    },[])
-
-    // Every time the page number changes, update the posts visible.
-    useEffect(()=>{
-        let startpoint = itemsPerPage*(currentPage-1);
-        let length = posts.length-startpoint;
-        if(length>itemsPerPage){
-            length=itemsPerPage;
-        }
-        let endpoint = startpoint+length;
-        
-        if(currentPage==="0"){
-            setCurrentPosts(posts);
-        }else{
-            setCurrentPosts(posts.slice(startpoint,endpoint));
-        }
-        
-    },[currentPage,posts])
+    },[pageNumber])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
@@ -102,8 +79,8 @@ export default function Admin() {
         }
 
         setPosts(sortedPosts);
-        if(currentPage!="0"){
-            setCurrentPage("1");
+        if(page!=0){
+            history.push('/admin/page/1');
         }
         
     }
@@ -119,7 +96,7 @@ export default function Admin() {
             <div className="p-10 w-full max-w-5xl">
                 <h2 className="border-b-2 pb-2 m-2">Posts</h2>
                 
-                {loading? <Loader/> : currentPosts.length === 0 ? <h2>No Posts Found</h2> : (<>
+                {loading? <Loader/> : posts.length === 0 ? <h2>No Posts Found</h2> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
                     <p>Filter by: </p>
                     <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect}>
@@ -138,29 +115,17 @@ export default function Admin() {
 
                 <div className="grid grid-flow-row">
                     { 
-                    currentPosts.map((post)=>{
+                    posts.map((post)=>{
                         return(
                             <AdminRow key={post._id} post={post} handleDeletePost={handleDeletePost}/>
                         );
                     })
                     }
                     
-                    
-                    {currentPage==="0" ?
-                    <button className="mx-auto mt-5 w-40 btn-primary" onClick={()=>setCurrentPage("1")}>see fewer posts</button>
-                    :(
-                        <div className="grid place-items-center">
-                            <ul className="flex gap-5 w-full justify-center mt-5">
-                        {pages.map((page,index)=>{
-                            return(
-                            <li key={index} ><button className={`${currentPage===page && "bg-purple-300"} px-2 py-1 rounded bg-gray-300 hover:bg-purple-600 cursor-pointer`} onClick={()=>setCurrentPage(page)}>{page}</button></li>
-                            );
-                        })}
-                    </ul>
-                    {posts.length>itemsPerPage &&
-                    <button className="mt-5 w-40 btn-primary" onClick={()=>setCurrentPage("0")}>see all posts</button>}
+                    <div className="grid place-items-center">
+                            <Pagination pages={pages} page={page} />
                     </div>
-                    )}
+                    
                 </div></>)}
                 
             </div>

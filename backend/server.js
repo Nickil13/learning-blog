@@ -19,7 +19,7 @@ app.use(fileUpload());
 const postsRoute = require('./routes/postRoutes');
 app.use('/api/posts',postsRoute);
 
-const usersRoute = require('./routes/users');
+const usersRoute = require('./routes/userRoutes');
 app.use('/api/users',usersRoute);
 
 const cloudinaryRoute = require('./routes/cloudinaryRoutes');
@@ -33,6 +33,18 @@ mongoose.connect(process.env.MONGO_URI, {useUnifiedTopology: true,
     }
     
 )
+
+
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '/frontend/build')));
+    app.get('*', (req,res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    })
+}else{
+    app.get('/'), (req, res) =>{
+        res.send("API is running");
+    }
+}
 
 //Middleware
 app.use(notFound);
