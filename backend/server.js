@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const fileUpload = require('express-fileupload');
+const connectDB = require('./config/db');
 const { notFound, errorHandler} = require('./middleware/errorMiddleware');
 
 
@@ -32,12 +33,7 @@ app.use('/api/cloudinary', cloudinaryRoute);
 
 
 //Connect to DB
-mongoose.connect(process.env.MONGO_URI, {useUnifiedTopology: true,
-    useNewUrlParser: true, useCreateIndex: true},()=>{
-        console.log("Connected to database!");
-    }
-    
-)
+connectDB();
 
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(path.resolve(), '/frontend/build')));
