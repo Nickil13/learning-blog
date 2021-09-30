@@ -84,7 +84,7 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
                     'Content-Type': 'application/json'
                 }} )
                 
-                const url = data.uploadedResponse.url;
+                const url = data.uploadedResponse.secure_url;
                 setImageName(uploadedFile.name);
                 setImagePath(url);
                
