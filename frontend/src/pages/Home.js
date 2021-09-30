@@ -24,7 +24,7 @@ export default function Home() {
             setLoading(false);
           }
         }
-        loadPosts();
+        // loadPosts();
         
         //Load Old Posts 
         const loadOldPosts = async () =>{

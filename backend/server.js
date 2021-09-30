@@ -36,6 +36,7 @@ app.use('/api/cloudinary', cloudinaryRoute);
 connectDB();
 
 if(process.env.NODE_ENV === 'production'){
+    console.log("In production!");
     app.use(express.static(path.join(path.resolve(), '/frontend/build')));
     app.get('*', (req,res) => {
         res.sendFile(path.resolve(path.resolve(), 'frontend', 'build', 'index.html'));
