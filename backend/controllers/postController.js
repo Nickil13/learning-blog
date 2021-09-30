@@ -22,7 +22,6 @@ const getAllPosts = asyncHandler(async (req,res)=>{
 const getPosts = asyncHandler(async (req,res)=>{
     let limit = 8;
     let filter = {};
-    console.log('getting posts');
 
     if(req.query.filter_category){
         filter = { 'tags':req.query.filter_category};
