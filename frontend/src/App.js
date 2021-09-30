@@ -35,9 +35,9 @@ function App() {
                 
                 
                 <Route path="/admin"><Admin/></Route>
-                
-                <Route path="/posts"><Posts/></Route>
                 <Route path="/posts/:id"><IndividualPost/></Route>
+                <Route path="/posts"><Posts/></Route>
+                
                 
                 
             </Switch>

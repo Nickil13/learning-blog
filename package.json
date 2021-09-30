@@ -17,7 +17,9 @@
     "mongoose": "^5.13.8"
   },
   "devDependencies": {
-    "concurrently": "^6.2.1"
+    "concurrently": "^6.2.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.13"
   },
   "scripts": {
     "start": "node backend/server.js",
