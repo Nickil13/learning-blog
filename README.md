@@ -29,3 +29,6 @@ Stylistically, I got more practice with Tailwind by adding extensions and workin
 
 I also learned how to upload files and save them locally, eventually moving over to Cloudinary for my image storage.
 
+## Preview
+<img src='https://user-images.githubusercontent.com/36387179/135682380-eb54622c-a17a-4abc-b9d9-e3d231a5ffc8.png' width="700">
+
