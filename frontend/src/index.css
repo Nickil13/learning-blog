@@ -15,6 +15,9 @@ html{
     h3 {
         @apply text-xl dark:text-purple-400;
     }
+    h1,h2,h3{
+        @apply font-display tracking-wider;
+    }
     p {
         @apply dark:text-gray-400;
     }

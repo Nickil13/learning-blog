@@ -20,6 +20,7 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
     const[message,setMessage] = useState('');
     const[messageType,setMessageType] = useState('default');
     const[messageLink,setMessageLink] = useState('');
+    const tagList = tagData.filter((tag)=>tag.name!=='all').map((tag)=>tag.name);
 
     useEffect(()=>{
         if(post){
@@ -51,8 +52,8 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
     useEffect(()=>{
         if(selectedImage){
             setImageName(`${selectedImage.public_id.split("/")[1]}.${selectedImage.format}`);
-            setImagePath(selectedImage.url);
-            setImageSource(selectedImage.url);
+            setImagePath(selectedImage.secure_url);
+            setImageSource(selectedImage.secure_url);
         }
     },[selectedImage])
 
@@ -113,7 +114,7 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
         e.preventDefault();
         submitForm(title,tags,text);
     }
-    
+  
     return (
         <form className="grid md:col-start-2 w-5/6 max-w-xl" onSubmit={handleSubmit}>
                 {/* Title Input */}
@@ -133,9 +134,9 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
                 <div className="flex flex-col items-center p-5 gap-2 w-full">
                     <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="tags">Tags</label>
                     <div className="flex flex-wrap gap-5 justify-center">
-                        <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>
-                        {currentTags>1 && <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>}
-                        {currentTags>2 && <ComboBox name="tag" list={tagData} onChange={handleComboSelect}/>}
+                        <ComboBox name="tag" list={tagList} onChange={handleComboSelect}/>
+                        {currentTags>1 && <ComboBox name="tag" list={tagList} onChange={handleComboSelect}/>}
+                        {currentTags>2 && <ComboBox name="tag" list={tagList} onChange={handleComboSelect}/>}
                         {currentTags<3 &&
                         <button className="dark:text-white" type="button" onClick={()=>setCurrentTags(currentTags+1)}>+</button>}
                     </div>

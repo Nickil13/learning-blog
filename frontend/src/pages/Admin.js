@@ -14,18 +14,19 @@ export default function Admin() {
     const[page,setPage] = useState(1);
     const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete,loading,setLoading} = useGlobalContext();
     const[isDeleting,setIsDeleting] = useState(false);
+    const[deleteSuccess,setDeleteSuccess] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
     const history = useHistory();
 
+    
     useEffect(()=>{
         const fetchPosts = async () =>{
             setLoading(true);
             try{
-                
                 let config = {headers:{Authorization: `Bearer ${userInfo.token}`}};
-
-                const {data} = await axios.get(`/api/posts/admin?pageNumber=${pageNumber}`, config);
                 
+                const {data} = await axios.get(`/api/posts/admin?pageNumber=${pageNumber}`, config);
+
                 setPages(data.pages);
                 setPosts(data.posts);
                 setPage(data.page);
@@ -38,7 +39,7 @@ export default function Admin() {
             }
         }
         fetchPosts();
-    },[pageNumber])
+    },[pageNumber,deleteSuccess])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
@@ -48,6 +49,7 @@ export default function Admin() {
                     let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
                     await axios.delete(`/api/posts/${postToDelete._id}`,config);
                     
+                    setDeleteSuccess(true);
                     setIsDeleting(false);
                     setIsConfirmDelete(false);
                     setPostToDelete(null);
@@ -79,7 +81,7 @@ export default function Admin() {
         }
 
         setPosts(sortedPosts);
-        if(page!=0){
+        if(page!==0){
             history.push('/admin/page/1');
         }
         

@@ -16,11 +16,12 @@ const getAllPosts = asyncHandler(async (req,res)=>{
     res.json({posts, page, pages: Math.ceil(count/pageSize)});
 })
 
-// @desc    Get a limited amount of posts
+// @desc    Get a limited amount of posts with cursor pagination
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req,res)=>{
     let limit = 8;
+    let posts = [];
     let filter = {};
 
     if(req.query.filter_category){
@@ -28,25 +29,19 @@ const getPosts = asyncHandler(async (req,res)=>{
     }
     
     if(req.query.next_cursor){
-        const posts = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: req.query.next_cursor}}).limit(limit);
-        
-        if(posts.length<limit){
-            res.json({posts});
-        }else{
-            let next_cursor = posts[posts.length-1].createdAt;
-            res.json({posts,next_cursor});
-        }
-        
+        posts = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: req.query.next_cursor}}).limit(limit);  
     }else{
         //First page
-        const posts = await Post.find(filter).sort({createdAt:-1}).limit(limit);
-        if(posts.length<limit){
-            res.json({posts});
-        }else{
-            let next_cursor = posts[posts.length-1].createdAt;
-            res.json({posts,next_cursor});
-        }
-       
+        posts = await Post.find(filter).sort({createdAt:-1}).limit(limit);
+    }
+
+    const nextPost = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: posts[posts.length-1].createdAt}}).limit(1);
+
+    if(posts.length<limit || nextPost.length===0){
+        res.json({posts});
+    }else{
+        let next_cursor = posts[posts.length-1].createdAt;
+        res.json({posts,next_cursor});
     }
 
     

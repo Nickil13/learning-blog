@@ -5,7 +5,7 @@ const AppContext = React.createContext();
 export const AppProvider = ({children}) => {
     const[theme,setTheme] = useState('light');
     const[isLoggedIn,setIsLoggedIn] = useState(false);
-    const[userInfo,setUserInfo] = useState({});
+    const[userInfo,setUserInfo] = useState(localStorage.getItem('userInfo') && JSON.parse(localStorage.getItem('userInfo')));
     const[isConfirmDelete,setIsConfirmDelete] = useState(false);
     const[isAlertShowing,setIsAlertShowing] = useState(false);
     const[loading,setLoading] = useState(false);
@@ -32,6 +32,10 @@ export const AppProvider = ({children}) => {
     useEffect(()=>{
         if(localStorage.getItem('theme')){
             setTheme(localStorage.getItem('theme'));
+        }else{
+            if(window.matchMedia('(prefers-color-scheme:dark)').matches){
+                setTheme('dark');
+            }
         }
     },[])
 
@@ -81,9 +85,9 @@ export const AppProvider = ({children}) => {
     
     value=
     {{
-        isLoggedIn,
         login,
         userInfo,
+        isLoggedIn,
         logout,
         confirmDelete,
         isConfirmDelete,

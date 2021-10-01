@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import {FiArrowLeftCircle, FiArrowRightCircle} from 'react-icons/fi';
 import {AiOutlineFileAdd, AiOutlineUser} from 'react-icons/ai';
 import DarkModeToggle from './DarkModeToggle';
 import { useGlobalContext } from '../context';
-import {GiStack, GiCat, GiAirplaneDeparture, GiGamepad, GiCoffeeCup, GiHouse, GiHearts} from 'react-icons/gi';
-import {BsCodeSlash} from 'react-icons/bs';
+import { iconData } from '../data';
+// import {GiStack, GiCat, GiAirplaneDeparture, GiGamepad, GiCoffeeCup, GiHouse, GiHearts} from 'react-icons/gi';
+// import {BsCodeSlash} from 'react-icons/bs';
 
 export default function Navbar() {
     const[isSidebarOpen,setIsSidebarOpen] = useState(false);
@@ -75,6 +76,7 @@ export default function Navbar() {
     }
     return (
     <header className="h-12 transparent">
+        <div className="absolute font-display font-bold text-gray-700 dark:text-purple-300 p-5"><Link to="/">Learning Blog</Link></div>
         <nav className={`fixed grid grid-cols-2 right-0 h-screen place-items-center justify-center gap-5 z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
           {/* Arrow Slide Bar */}
           <div className="pointer-events-auto">
@@ -93,27 +95,34 @@ export default function Navbar() {
           <div className="relative grid bg-black bg-opacity-50 pointer-events-auto" ref={navContainer}>
             <DarkModeToggle/>
           
-          <ul className="flex flex-col justify-center grid-start-2 gap-5  h-screen px-5 pointer-events-auto">
-            <li>
-              <GiHouse className="nav-icon" onClick={()=>handleNavClick("home")}/>
+          <ul className="flex flex-col justify-center grid-start-2  h-screen px-5 pointer-events-auto">
+            {iconData.map((item)=>{
+              return(
+                <li key={item.id} className='nav-icon mb-4' onClick={()=>{
+                  handleNavClick(item.name)
+                }}>{item.icon}</li>
+              )
+            })}
+            {/* <li>
+              <GiHouse className="nav-icon mb-4" onClick={()=>handleNavClick("home")}/>
             </li>
-            <li><GiStack className="nav-icon" onClick={()=>handleNavClick("all")}/></li>
-            <li><GiCat className="nav-icon" onClick={()=>handleNavClick("animals")}/></li>
+            <li><GiStack className="nav-icon mb-4" onClick={()=>handleNavClick("all")}/></li>
+            <li><GiCat className="nav-icon mb-4" onClick={()=>handleNavClick("animals")}/></li>
             <li>
-              <GiCoffeeCup className="nav-icon" onClick={()=>handleNavClick("food")}/>
+              <GiCoffeeCup className="nav-icon mb-4" onClick={()=>handleNavClick("food")}/>
             </li>
             <li>
-              <GiAirplaneDeparture className="nav-icon" onClick={()=>handleNavClick("travel")}/>
+              <GiAirplaneDeparture className="nav-icon mb-4" onClick={()=>handleNavClick("travel")}/>
             </li>
             <li>
-              <GiGamepad className="nav-icon" onClick={()=>handleNavClick("games")}/>
+              <GiGamepad className="nav-icon mb-4" onClick={()=>handleNavClick("games")}/>
             </li>
             <li>
-              <BsCodeSlash className="nav-icon" onClick={()=>handleNavClick("code")}/>
+              <BsCodeSlash className="nav-icon mb-4" onClick={()=>handleNavClick("code")}/>
             </li>
             <li>
               <GiHearts className="nav-icon" onClick={()=>handleNavClick("wellness")}/>
-            </li>   
+            </li>    */}
           </ul> 
           </div>
         </nav>

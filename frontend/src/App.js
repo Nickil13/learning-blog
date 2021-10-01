@@ -20,24 +20,20 @@ function App() {
           <Navbar/>
           <main className="grid place-items-center py-20 w-5/6 mx-auto">
             <Switch>
-              <Route exact path="/"><Home/></Route>
+                <Route exact path="/"><Home/></Route>
                 <Route path="/login">
                   {isLoggedIn ? <Redirect to="/admin"/> : <Login/>}
                 </Route>
+                
                 <Route path="/admin/page/:pageNumber"><Admin/></Route>
                 <Route path="/admin/new-post"><NewPost/></Route>
-                
                 <Route path="/admin/edit-post/:id"><EditPost/></Route>
-                
                 <Route path="/admin">
                   {!isLoggedIn ? <Redirect to="/login"/> : <Admin/>}
                 </Route>
                 
-                
-                <Route path="/admin"><Admin/></Route>
                 <Route path="/posts/:id"><IndividualPost/></Route>
                 <Route path="/posts"><Posts/></Route>
-                
                 
                 
             </Switch>

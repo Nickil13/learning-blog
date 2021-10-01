@@ -3,14 +3,17 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import Post from '../components/Post';
 import Loader from '../components/Loader';
+import { tagData} from '../data';
 
 export default function Posts() {
     const[posts,setPosts] = useState([]);
     const[nextCursor,setNextCursor] = useState(null);
-    const[filterCategory,setFilterCategory] = useState("");
+    const location = useLocation();
+    const[filterCategory,setFilterCategory] = useState(location.search.split("=")[1]);
+    const {icon,description} = tagData.filter((tag)=>tag.name===filterCategory)[0] || tagData.find((tag)=>tag.name==='all');
     const[loading,setLoading] = useState(false);
     const[loadingMore,setLoadingMore] = useState(false);
-    const location = useLocation();
+    
 
     useEffect(()=> {
         // Load Posts
@@ -77,15 +80,14 @@ export default function Posts() {
         }
         fetchMorePosts(nextCursor);
     }
+    
     return (
         <div>
             <div className="grid place-items-center py-12">
-                <h1>Learning Blog</h1>
-                <p className="py-4 max-w-sm">Welcome to my blog! I write about a variety of things, from animals, food and travel to games and code.</p>
-                {filterCategory && 
-                <p className="text-purple-400 text-2xl font-bold dark:text-purple-400">
-                  # {filterCategory}
-                  </p>}
+                <div className="mb-5 text-4xl text-white bg-purple-400 p-5 rounded-full">{icon}</div>
+                <h1 className="text-purple-400 text-2xl font-bold dark:text-purple-400"># {filterCategory ? filterCategory : 'all'}</h1>
+                <p className="py-4 max-w-sm text-center">{description}</p>
+          
             </div>
         {/* Main feed */}
         {loading ? 
