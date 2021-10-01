@@ -103,26 +103,6 @@ export default function Navbar() {
                 }}>{item.icon}</li>
               )
             })}
-            {/* <li>
-              <GiHouse className="nav-icon mb-4" onClick={()=>handleNavClick("home")}/>
-            </li>
-            <li><GiStack className="nav-icon mb-4" onClick={()=>handleNavClick("all")}/></li>
-            <li><GiCat className="nav-icon mb-4" onClick={()=>handleNavClick("animals")}/></li>
-            <li>
-              <GiCoffeeCup className="nav-icon mb-4" onClick={()=>handleNavClick("food")}/>
-            </li>
-            <li>
-              <GiAirplaneDeparture className="nav-icon mb-4" onClick={()=>handleNavClick("travel")}/>
-            </li>
-            <li>
-              <GiGamepad className="nav-icon mb-4" onClick={()=>handleNavClick("games")}/>
-            </li>
-            <li>
-              <BsCodeSlash className="nav-icon mb-4" onClick={()=>handleNavClick("code")}/>
-            </li>
-            <li>
-              <GiHearts className="nav-icon" onClick={()=>handleNavClick("wellness")}/>
-            </li>    */}
           </ul> 
           </div>
         </nav>

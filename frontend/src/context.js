@@ -5,7 +5,7 @@ const AppContext = React.createContext();
 export const AppProvider = ({children}) => {
     const[theme,setTheme] = useState('light');
     const[isLoggedIn,setIsLoggedIn] = useState(false);
-    const[userInfo,setUserInfo] = useState(localStorage.getItem('userInfo') && JSON.parse(localStorage.getItem('userInfo')));
+    const[userInfo,setUserInfo] = useState(localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')): {});
     const[isConfirmDelete,setIsConfirmDelete] = useState(false);
     const[isAlertShowing,setIsAlertShowing] = useState(false);
     const[loading,setLoading] = useState(false);
