@@ -1,8 +1,9 @@
 # Personal Blog
 A blog with a backend Node.js server and a React frontend. Users can perform basic CRUD operations with posts, with authentication and authorization required.
--Posts can be filtered by category
--Posts can be managed by the logged in user using an Admin dashboard.
--Darkmode feature
+
+- Posts can be filtered by category
+- Posts can be managed by the logged in user using an Admin dashboard.
+- Darkmode feature
 
 ## Live site
 - Heroku: [learningblogapp](https://learningblogapp.herokuapp.com/)
