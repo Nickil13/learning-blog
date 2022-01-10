@@ -5,13 +5,14 @@ import { useParams, useHistory, Link } from 'react-router-dom';
 import { FiEdit } from 'react-icons/fi';
 import {useGlobalContext} from '../context';
 import Loader from '../components/Loader';
+import ReactMarkdown from 'react-markdown';
 
 export default function IndividualPost() {
     const[post,setPost] = useState(null);
     const{id} = useParams();
     const history = useHistory();
     const{isLoggedIn,loading,setLoading} = useGlobalContext();
-
+    
     useEffect(()=>{
         const loadPost = async () =>{
             setLoading(true);
@@ -22,7 +23,6 @@ export default function IndividualPost() {
                      
             }catch(error){
                 setLoading(false);
-                console.log("There was an error finding the post.");
             }
         }
         loadPost();
@@ -38,7 +38,7 @@ export default function IndividualPost() {
         <div className="w-full">
             {/* Post Container */}
             {!post ? 
-            <div>
+            <div className="text-center mt-10">
                 <h1>No blog post found.</h1>
                 <Link className="btn-primary block w-32 text-center my-5 mx-auto" to="/">back to Home</Link>
             </div> 
@@ -53,10 +53,11 @@ export default function IndividualPost() {
                     })}
                 </ul>
                 <img className="object-cover max-h-60 md:max-h-96 w-full" src={post.image} alt={post.title}/>
-                <div className="py-5">
-                {post.text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
+                <div className="py-5 w-full">
+                    <ReactMarkdown className="react-markdown">{post.text}</ReactMarkdown>
+                {/* {post.text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
                     return <p key={index}>{paragraph}<br/><br/></p>
-                    })}
+                    })} */}
                 </div>
                 {/* Edit button  */}
                 {isLoggedIn && <button className="btn-primary absolute -top-20 right-0 flex gap-5" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}>

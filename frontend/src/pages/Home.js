@@ -45,8 +45,12 @@ export default function Home() {
     return (
         <div>
             <div className="grid place-items-center py-12">
-                <h1 className="text-4xl">Learning Blog</h1>
-                <p className="py-4 max-w-sm text-center">Welcome to my blog! I write about a variety of things, from animals, food and travel to games and code.</p>
+                <h1 className="text-4xl mb-4">Learning Blog</h1>
+                <div className="py-4 max-w-lg text-center">
+                  <p className="mb-2 dark:text-purple-400">Welcome to my blog!</p>
+                  <p>It's currently being used as a learning tool for my coding endeavours and for writing short posts about a variety of things, from animals, food and travel to games and code.</p>
+                </div>
+                
             </div>
         {/* Main feed */}
         {loading ? 

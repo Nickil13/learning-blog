@@ -21,6 +21,9 @@ html{
     p {
         @apply dark:text-gray-400;
     }
+    body {
+        @apply text-lg;
+    }
     footer{
         @apply h-24;
     }
@@ -32,12 +35,34 @@ html{
         transition-colors;
     }
     .btn-secondary{
-        @apply bg-gray-100 w-16 rounded py-1 hover:bg-gray-200;
+        @apply bg-gray-100 rounded p-2 hover:bg-gray-200;
     }
     .nav-icon{
         @apply text-4xl cursor-pointer text-white hover:text-purple-300;
     }
     .post-input{
         @apply p-3 bg-gray-200 placeholder-gray-600 dark:bg-purple-200 dark:text-black border-2 border-gray-600 rounded-md;
+    }
+
+    /* Combo Box */
+    .combo-box{
+        @apply hidden bg-indigo-200;
+    }
+    .combo-box.show{
+        @apply block;
+    }
+
+    /* React Markdown */
+    .react-markdown h1, .react-markdown h2, .react-markdown h3{
+        @apply mb-2 mt-4;
+    }  
+    .react-markdown ol{
+        @apply list-decimal list-inside mb-1 dark:text-gray-400;
+    }
+    .react-markdown li{
+        @apply dark:text-gray-400 mb-2;
+    }
+    .react-markdown ul{
+        @apply list-disc list-inside;
     }
 }
