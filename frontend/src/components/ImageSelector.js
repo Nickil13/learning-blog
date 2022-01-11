@@ -50,9 +50,9 @@ export default function ImageSelector({onSetSelected, setSelectorShowing}) {
                 </ul>
                 
             </div>
-            <div className="flex justify-around sm:mt-5">
-                <button id="select-btn" className="btn-secondary" onClick={handleConfirmClick}>ok</button>
-                <button className="btn-secondary" onClick={()=>setSelectorShowing(false)}>cancel</button>
+            <div className="flex justify-center sm:mt-5">
+                <button id="select-btn" className="btn-secondary w-20" onClick={handleConfirmClick}>ok</button>
+                <button className="btn-secondary w-20 ml-10" onClick={()=>setSelectorShowing(false)}>cancel</button>
             </div>  
         </div>
         </div>

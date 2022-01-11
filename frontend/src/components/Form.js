@@ -1,12 +1,11 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import ComboBox from '../components/ComboBox';
-import Message from '../components/Message';
 import ImageInput from '../components/ImageInput';
 import ImageSelector from '../components/ImageSelector';
 import {tagData} from '../data';
 
-export default function Form({post, submitForm,setImage, btnTitle}) {
+export default function Form({post, submitForm, btnTitle}) {
     const[title,setTitle] = useState("");
     const[imageName,setImageName] = useState("default.jfif");
     const[imagePath,setImagePath] = useState("/images/default.jfif");
@@ -19,7 +18,6 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
     const[uploadedFile,setUploadedFile] = useState(null);
     const[message,setMessage] = useState('');
     const[messageType,setMessageType] = useState('default');
-    const[messageLink,setMessageLink] = useState('');
     const tagList = tagData.filter((tag)=>tag.name!=='all').map((tag)=>tag.name);
     
     useEffect(()=>{
@@ -46,9 +44,6 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
         }
     },[post])
     
-    useEffect(()=>{
-        setImage(imagePath);
-    },[imagePath, setImage])
 
     useEffect(()=>{
         if(selectedImage){
@@ -70,10 +65,9 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
         }
     },[uploadedFile])
 
-    const updateMessage = (message,type,link) =>{
+    const updateMessage = (message,type) =>{
         setMessage(message);
         if(type) setMessageType(type);
-        if(link) setMessageLink(link);
     }
 
     const uploadImage = async(e) => {
@@ -113,28 +107,36 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
 
     const handleSubmit =(e) =>{
         e.preventDefault();
-        submitForm(title,tags,text);
+        submitForm(title,tags,text,imagePath);
     }
   
     return (
-        <form className="grid md:col-start-2 w-5/6 max-w-xl" onSubmit={handleSubmit}>
+        <form className="grid md:grid-cols-2 w-full max-w-2xl" onSubmit={handleSubmit}>
+                {/* Image */}
+                <div className="relative h-0 pb-9/16 md:pb-full md:col-start-1 md:mr-2">
+                    <img className="absolute inset-0 w-full object-cover h-full" src={imagePath} onError={(e)=>{e.target.onerror =null; e.target.src="/images/default.jfif"}} alt="default" />
+                </div>
+
+                
                 {/* Title Input */}
-                <div className="flex flex-col items-center p-5">
-                    <label className="mb-3 md:mb-0 md:mr-5 dark:text-gray-400 font-semibold" htmlFor="title">Title</label>
+                <div className="flex flex-col items-center p-5 md:col-start-1 md:row-start-1 md:col-span-2">
+                    <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="title">Title</label>
                     <input className="post-input text-center w-full" type="text" id="title" placeholder="My Adventure" value={title} onChange={(e)=>setTitle(e.target.value)}/>
                 </div>
 
-                {/* Image Input */}
-                <ImageInput name={imageName} 
-                handleUploadSelect={setUploadedFile} onUploadClick={uploadImage} setSelectorShowing={setSelectorShowing}/>
-                
+                <div className="md:col-start-2">
+                    {/* Image Input */}
+                    <ImageInput name={imageName} 
+                    handleUploadSelect={setUploadedFile} onUploadClick={uploadImage} setSelectorShowing={setSelectorShowing} message={message} messageType={messageType}/>
+                </div>
+
                 {/* Image Selector */}
                 {selectorShowing && <ImageSelector onSetSelected={setSelectedImage} setSelectorShowing={setSelectorShowing}/>}
 
                 {/* Tag Inputs */}
-                <div className="flex flex-col items-center p-5 gap-2 w-full">
+                <div className="flex flex-col items-center p-5 gap-2 w-full md:col-start-1 md:col-span-2">
                     <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="tags">Tags</label>
-                    <div className="flex flex-wrap gap-5 justify-center">
+                    <div className="flex gap-5 justify-center">
                         <ComboBox name="tag1" list={tagList} onChange={handleComboSelect}/>
                         <ComboBox name="tag2" list={tagList} hidden={currentTags<2} onChange={handleComboSelect}/>
                         <ComboBox name="tag3" list={tagList} hidden={currentTags<3} onChange={handleComboSelect}/>
@@ -142,15 +144,14 @@ export default function Form({post, submitForm,setImage, btnTitle}) {
                         <button className="dark:text-white" type="button" onClick={()=>setCurrentTags(currentTags+1)}>+</button>}
                     </div>
                 </div>
-
+                
                 {/* Text Input */}
-                <div className="flex flex-col justify-between items-center p-5 w-full">
+                <div className="flex flex-col justify-center items-center p-5 w-full md:col-span-2">
                     <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="text">Text</label>
-                    <textarea className="p-3 w-full resize-none h-40 post-input" type="text" id="text" placeholder="This the start of my adventure." value={text} onChange={(e)=>setText(e.target.value)}/>
+                    <textarea className="p-3 w-full resize-none h-60 post-input" type="text" id="text" placeholder="This the start of my adventure." value={text} onChange={(e)=>setText(e.target.value)}/>
                 </div>
 
-                <button type="submit" className="btn-primary w-3/5 mx-auto">{btnTitle}</button>
-                {message && <Message type={messageType} link={messageLink}>{message}</Message>}
+                <button type="submit" className="btn-primary w-3/5 mx-auto md:col-span-2">{btnTitle}</button>
             </form>
     )
 }

@@ -54,9 +54,9 @@ export default function Home() {
             </div>
         {/* Main feed */}
         {loading ? 
-        <Loader/> : <div className="grid place-items-center">
+        <Loader/> : <div className="grid">
           {/* Posts */}
-          <div className="px-5">
+          <div>
             {posts.length === 0 ? 
             <div className="text-center border-double border-purple-300 border-2 p-5 m-5 mb-20">
                 <h2>No posts found.</h2>
@@ -69,7 +69,7 @@ export default function Home() {
           </div>
         
         {/* Bottom Section with Older Posts */}
-        <div className="w-full border-t-2 pt-5">
+        <div className="w-full border-t-2 pt-5 mt-6">
           <h2 className="text-center p-5 mb-5">Older Posts</h2>
           {/* Older Posts List */}
           <div className="grid auto-cols-fr md:grid-cols-2 gap-5">

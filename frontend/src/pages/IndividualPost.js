@@ -44,7 +44,7 @@ export default function IndividualPost() {
             </div> 
                 : <article className="grid place-items-center w-full max-w-3xl mx-auto relative">
                 <h1 className="text-center mb-5">{post.title}</h1>
-                <Moment className="text-gray-400" format="MMM DD YYYY" date={post.createdAt}/>
+                <Moment className="text-gray-400" format="MMM DD, YYYY" date={post.createdAt}/>
                 <ul className="flex gap-2 text-gray-500 dark:text-purple-400 mb-5">
                     {post.tags.map((tag,index)=>{
                         return(
@@ -52,16 +52,18 @@ export default function IndividualPost() {
                         )
                     })}
                 </ul>
-                <img className="object-cover max-h-60 md:max-h-96 w-full" src={post.image} alt={post.title}/>
-                <div className="py-5 w-full">
+                <div className="relative w-full h-0 pb-2/3 md:pb-9/16">
+                    <img className="absolute inset-0 w-full h-full object-cover border-2 shadow-md dark:border-white" src={post.image} alt={post.title}/>
+                </div>
+                
+                <div className="py-10 w-full">
                     <ReactMarkdown className="react-markdown">{post.text}</ReactMarkdown>
                 {/* {post.text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
                     return <p key={index}>{paragraph}<br/><br/></p>
                     })} */}
                 </div>
                 {/* Edit button  */}
-                {isLoggedIn && <button className="btn-primary absolute -top-20 right-0 flex gap-5" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}>
-                    Edit <FiEdit className="text-2xl"/>
+                {isLoggedIn && <button className="absolute right-0 -top-20 rounded-icon" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-2xl"/>
                 </button>}
             </article>}
             

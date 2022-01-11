@@ -84,7 +84,7 @@ export default function Posts() {
     return (
         <div>
             <div className="grid place-items-center py-12">
-                <div className="mb-5 text-4xl text-white bg-purple-400 p-5 rounded-full">{icon}</div>
+                <div className="rounded-icon">{icon}</div>
                 <h1 className="text-purple-400 text-2xl font-bold dark:text-purple-400"># {filterCategory ? filterCategory : 'all'}</h1>
                 <p className="py-4 max-w-sm text-center">{description}</p>
           

@@ -15,10 +15,10 @@ import Footer from './components/Footer';
 function App() {
   const{isLoggedIn} = useGlobalContext();
   return (
-    <div className="relative min-h-screen pb-24 dark:bg-gray-700">
+    <div className="relative min-h-screen pb-24 px-5 dark:bg-gray-700">
       <Router>
           <Navbar/>
-          <main className="grid place-items-center py-20 w-5/6 mx-auto">
+          <main className="grid place-items-center py-20">
             <Switch>
                 <Route exact path="/"><Home/></Route>
                 <Route path="/login">
