@@ -2,13 +2,11 @@ import axios from 'axios';
 import React, { useState} from 'react';
 import Form from '../components/Form';
 import Message from '../components/Message';
-
 import { useGlobalContext } from '../context';
 
 
 export default function NewPost() {
     const{userInfo} = useGlobalContext();
-    const[image,setImage] = useState("/images/default.jfif");
     const[loading,setLoading] = useState(false);
     const[message,setMessage] = useState('');
     const[messageType,setMessageType] = useState('default');
@@ -21,8 +19,8 @@ export default function NewPost() {
         if(link) setMessageLink(link);
     }
 
-    const submitForm = async (title,tags,text)=>{
-        if(title && image && tags.length>0 && text){
+    const submitForm = async (title ,tags, text, image)=>{
+        if(title && image && tags.length>0 && text && image){
             setLoading(true);
             try{
                 let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
@@ -49,14 +47,11 @@ export default function NewPost() {
 
 
     return (
-        <div className="grid md:grid-cols-2 place-items-center">
-            <h1 className="mb-10 md:col-span-2">New Post</h1>
-            <div className="md:col-start-1 h-60 md:h-5/6 w-full max-w-lg md:px-5 md:pb-5">
-                <img className="object-cover w-full h-full" src={image} onError={(e)=>{e.target.onerror =null; e.target.src="/images/default.jfif"}} alt="default"/>
-            </div>
-            <Form btnTitle={'Create Post'} submitForm={submitForm} setImage={setImage}/>
-            <div className="md:col-span-2">
-            {loading ? <p>loading...</p> : message && <Message type={messageType} link={messageLink}>{message}</Message>}
+        <div className="grid place-items-center">
+            <h1 className="mb-10 text-center">New Post</h1>
+            <Form btnTitle={'Create Post'} submitForm={submitForm}/>
+            <div>
+                {loading ? <p>loading...</p> : message && <Message type={messageType} link={messageLink}>{message}</Message>}
             </div>
         </div>
     )

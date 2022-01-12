@@ -1,8 +1,8 @@
-// export const tagData = 
-//     ['none','animals','food','travel','games','code','wellness'];
-
 import {GiStack, GiCat, GiAirplaneDeparture, GiGamepad, GiCoffeeCup, GiHouse, GiHearts} from 'react-icons/gi';
 import {BsCodeSlash} from 'react-icons/bs';
+import { GoGraph } from 'react-icons/go';
+import { AiOutlineFileAdd } from 'react-icons/ai';
+import { ImFilesEmpty } from 'react-icons/im';
 
 export const iconData = [
     {
@@ -95,6 +95,13 @@ export const tagData = [
         description: 'All the posts I\'ve made.'
     },
 ]
+
+export const buttonList = [
+    {name: "New Post", icon: <AiOutlineFileAdd/>, path: "/admin/new-post"},
+    {name: "Drafts", icon: <ImFilesEmpty/>, path: "/admin/drafts"},
+    {name: "Posts", icon: <GiStack/>, path: "/admin/posts"},
+    {name: "Stats", icon: <GoGraph/>, path: "/admin/stats"}
+];
 
 
 

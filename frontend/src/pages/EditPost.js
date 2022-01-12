@@ -8,7 +8,6 @@ import {useGlobalContext} from '../context';
 
 export default function EditPost() {
     const[post,setPost] = useState(null);
-    // const[image,setImage] = useState('');
     const{userInfo} = useGlobalContext();
     const[loading,setLoading] = useState(false);
     const {id} = useParams();
@@ -38,7 +37,7 @@ export default function EditPost() {
         if(link) setMessageLink(link);
     }
     const submitEditForm = async (title, tags, text, image) =>{
-        if(title && tags.length>0 && text){
+        if(title && tags.length>0 && text && image){
             
             let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
 

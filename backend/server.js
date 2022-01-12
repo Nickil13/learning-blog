@@ -25,6 +25,9 @@ app.use(fileUpload());
 const postsRoute = require('./routes/postRoutes');
 app.use('/api/posts',postsRoute);
 
+const draftsRoute = require('./routes/draftRoutes');
+app.use('/api/drafts',draftsRoute);
+
 const usersRoute = require('./routes/userRoutes');
 app.use('/api/users',usersRoute);
 

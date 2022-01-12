@@ -19,7 +19,7 @@ html{
         @apply font-display tracking-wider;
     }
     p {
-        @apply text-gray-700 dark:text-gray-400;
+        @apply text-gray-700 dark:text-gray-300;
     }
     body {
         @apply md:text-lg;
