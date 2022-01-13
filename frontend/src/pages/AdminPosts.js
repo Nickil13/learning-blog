@@ -5,11 +5,11 @@ import Alert from '../components/Alert';
 import Loader from '../components/Loader';
 import { useGlobalContext} from '../context';
 import Pagination from '../components/Pagination';
-import { useParams, useHistory } from 'react-router';
+import { useParams, useLocation, useHistory } from 'react-router';
 
 export default function AdminPosts() {
     const[posts,setPosts] = useState([]);
-    const {pageNumber} = useParams() || 1;
+    // const {pageNumber} = useParams() || 1;
     const[pages,setPages]= useState(1);
     const[page,setPage] = useState(1);
     const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete,loading,setLoading} = useGlobalContext();
@@ -17,8 +17,14 @@ export default function AdminPosts() {
     const[deleteSuccess,setDeleteSuccess] = useState(false);
     const[postToDelete,setPostToDelete] = useState(null);
     const history = useHistory();
-
+    const location = useLocation();
+    const [pageNumber,setPageNumber] = useState(location.search ? location.search.split("=")[1] : 1);
     
+    useEffect(()=>{
+        setPageNumber(location.search ? location.search.split("=")[1] : 1);
+    },[location])
+
+
     useEffect(()=>{
         const fetchPosts = async () =>{
             setLoading(true);
@@ -82,7 +88,8 @@ export default function AdminPosts() {
 
         setPosts(sortedPosts);
         if(page!==0){
-            history.push('/admin/page/1');
+            // history.push('/admin/page/1');
+            history.push('/admin/posts/?page=1');
         }
         
     }
@@ -125,7 +132,7 @@ export default function AdminPosts() {
                     }
                     
                     <div className="grid place-items-center">
-                            <Pagination pages={pages} page={page} />
+                            <Pagination pages={pages} page={page} baseUrl={'/admin/posts/?page='} />
                     </div>
                     
                 </div></>)}

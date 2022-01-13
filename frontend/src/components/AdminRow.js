@@ -33,8 +33,8 @@ export default function AdminRow({post, handleDeletePost}) {
         
         {/* Fourth Column - Date */}
         <div className="flex lg:w-4/5 p-2">
-            <button className="btn-primary mr-2" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-3xl"/></button>
-            <button className="btn-primary" onClick={()=>handleDeletePost(post)}><HiOutlineDocumentRemove className="text-3xl"/></button>
+            <button className="btn-primary-rounded mr-2" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-3xl"/></button>
+            <button className="btn-primary-rounded" onClick={()=>handleDeletePost(post)}><HiOutlineDocumentRemove className="text-3xl"/></button>
         </div>
         
     </div>

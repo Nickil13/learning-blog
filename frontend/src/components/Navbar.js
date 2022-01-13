@@ -8,13 +8,14 @@ import { iconData } from '../data';
 
 
 export default function Navbar({isSmallScreen}) {
+    const history = useHistory();
     const[isSidebarOpen,setIsSidebarOpen] = useState(false);
     const{isLoggedIn,userInfo,logout,theme} = useGlobalContext();
     const[isMenuShowing,setIsMenuShowing] = useState(false);
     const[isCategoryMenuShowing,setIsCategoryMenuShowing] = useState(false);
-    const[selectedCategory,setSelectedCategory] = useState('');
+    const[selectedCategory,setSelectedCategory] = useState(history.location.search ? history.location.search.split("=")[1] : '');
     const navContainer = useRef(null);
-    const history = useHistory();
+    
  
 
     useEffect(()=>{
@@ -25,7 +26,14 @@ export default function Navbar({isSmallScreen}) {
       } 
     },[theme])
     
-    
+    useEffect(()=>{
+      //Update category icon on location change
+      let query = history.location.search;
+      if(query){
+        setSelectedCategory(query.split("=")[1]);
+      }
+    },[history.location])
+
     useEffect(()=>{
         document.addEventListener("mousedown",handleOffClick);
         return () =>{
@@ -51,6 +59,7 @@ export default function Navbar({isSmallScreen}) {
       setIsCategoryMenuShowing(false);
       setSelectedCategory(category);
     }
+
     const handleOffClick = (e) =>{
       if(navContainer.current && !navContainer.current.contains(e.target)){
         setIsSidebarOpen(false);
@@ -65,6 +74,7 @@ export default function Navbar({isSmallScreen}) {
         setIsCategoryMenuShowing(false);
       }
     }
+
     const handleMenuClick = () =>{
       setIsMenuShowing(true);
       //Using the li element for consistency versus the icon
@@ -89,19 +99,19 @@ export default function Navbar({isSmallScreen}) {
     }
 
     return (
-    <header className="transparent">
+    <header className="transparent md:w-4/5 mx-auto">
         {!isSmallScreen && <div className="absolute font-display font-bold text-gray-700 dark:text-purple-300 p-5"><Link to="/">Learning Blog</Link></div>}
         
         {/* Mobile Navbar */}
-        {isSmallScreen ? <nav className="fixed flex items-center p-4 bg-black bg-opacity-60 z-10 w-full top-0 left-0">
+        {isSmallScreen ? <nav className="fixed flex items-center py-4 px-6 bg-black bg-opacity-60 z-10 w-full top-0 left-0">
           <span className="mr-4 cursor-pointer" onClick={()=>{
             history.push('/');
             setSelectedCategory('');
           }}><img src="/favicon-32x32.png" alt="feather logo"/></span>
           <div className="flex items-center justify-end w-full">
             {/* Subject select */}
-            <div className="relative">
-              <span className="nav-icon" onClick={()=>setIsCategoryMenuShowing(true)}>{selectedCategory ? iconData.find((icon)=>icon.name===selectedCategory).icon : iconData.find((icon)=>icon.name==="home").icon}</span>
+            <div className="relative mx-2">
+              <span className="nav-icon " onClick={()=>setIsCategoryMenuShowing(true)}>{selectedCategory ? iconData.find((icon)=>icon.name===selectedCategory).icon : iconData.find((icon)=>icon.name==="home").icon}</span>
               
               {/* Category Menu Modal */}
               <ul className={`absolute bg-black z-20 opacity-80 p-4 rounded-md mt-5 top-full -left-1/4 ${!isCategoryMenuShowing && 'hidden'}`} id="category-menu">
@@ -112,7 +122,7 @@ export default function Navbar({isSmallScreen}) {
                 })}
               </ul>
             </div>
-            {isLoggedIn && <AiOutlineUser className="nav-icon mx-2" onClick={handleDashboardClick}/>}
+            <AiOutlineUser className="nav-icon mx-2" onClick={handleDashboardClick}/>
             <DarkModeToggle compact/>
           </div>
         </nav> :

@@ -37,7 +37,7 @@ function App() {
                   {isLoggedIn ? <Redirect to="/admin"/> : <Login/>}
                 </Route>
                 <Route path="/admin/posts"><AdminPosts/></Route>
-                <Route path="/admin/page/:pageNumber"><Admin/></Route>
+                {/* <Route path="/admin/posts/:pageNumber"><AdminPosts/></Route> */}
                 <Route path="/admin/new-post"><NewPost/></Route>
                 <Route path="/admin/edit-post/:id"><EditPost/></Route>
                 <Route path="/admin/drafts">
