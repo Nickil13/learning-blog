@@ -22,7 +22,7 @@ html{
         @apply text-gray-700 dark:text-gray-300;
     }
     body {
-        @apply md:text-lg;
+        @apply md:text-lg dark:bg-gray-700;
     }
     footer{
         @apply h-24;
@@ -59,11 +59,14 @@ html{
     .react-markdown h1, .react-markdown h2, .react-markdown h3{
         @apply mb-2 mt-4;
     }  
+    .react-markdown p{
+        @apply mb-3;
+    }
     .react-markdown ol{
         @apply list-decimal list-inside mb-1 dark:text-gray-400;
     }
     .react-markdown li{
-        @apply dark:text-gray-400 mb-2;
+        @apply dark:text-gray-300 mb-2;
     }
     .react-markdown ul{
         @apply list-disc list-inside;

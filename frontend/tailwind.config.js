@@ -1,3 +1,4 @@
+const { caretColor } = require('tailwindcss/defaultTheme');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
@@ -19,6 +20,12 @@ module.exports = {
         '2/3': '66.66667%',
         'full': '100%'
       },
+      margin:{
+        'nav': '68px'
+      },
+      minHeight:{
+        'nav-height': 'calc(100vh - 68px)',
+      }
     }
   },
   variants: {

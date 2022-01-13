@@ -13,7 +13,7 @@ router.route('/admin')
     .get(protect,getDrafts);
     
 router.route('/:id')
-    .get(getDraftById)
+    .get(protect, getDraftById)
     .delete(protect,deleteDraft);
 
 

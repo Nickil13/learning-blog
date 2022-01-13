@@ -1,10 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const Post = require('../models/Post');
 
-// @desc    Get paginated posts
-// @route   GET /api/posts/admin
+// @desc    Get paginated drafts
+// @route   GET /api/drafts
 // @access  Private
-const getAllPosts = asyncHandler(async (req,res)=>{
+const getDrafts = asyncHandler(async (req,res)=>{
     const pageSize = 8;
     const page = Number(req.query.pageNumber) || 1;
 
@@ -19,66 +19,67 @@ const getAllPosts = asyncHandler(async (req,res)=>{
 // @desc    Get a limited amount of posts with cursor pagination
 // @route   GET /api/posts
 // @access  Public
-const getPosts = asyncHandler(async (req,res)=>{
-    let limit = 8;
-    let posts = [];
-    let filter = {};
+// const getPosts = asyncHandler(async (req,res)=>{
+//     let limit = 8;
+//     let posts = [];
+//     let filter = {};
 
-    if(req.query.filter_category){
-        filter = { 'tags':req.query.filter_category};
-    }
+//     if(req.query.filter_category){
+//         filter = { 'tags':req.query.filter_category};
+//     }
     
-    if(req.query.next_cursor){
-        posts = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: req.query.next_cursor}}).limit(limit);  
-    }else{
-        //First page
-        posts = await Post.find(filter).sort({createdAt:-1}).limit(limit);
-    }
+//     if(req.query.next_cursor){
+//         posts = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: req.query.next_cursor}}).limit(limit);  
+//     }else{
+//         //First page
+//         posts = await Post.find(filter).sort({createdAt:-1}).limit(limit);
+//     }
 
-    const nextPost = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: posts[posts.length-1].createdAt}}).limit(1);
+//     const nextPost = await Post.find(filter).sort({createdAt:-1}).find({createdAt:{$lt: posts[posts.length-1].createdAt}}).limit(1);
 
-    if(posts.length<limit || nextPost.length===0){
-        res.json({posts});
-    }else{
-        let next_cursor = posts[posts.length-1].createdAt;
-        res.json({posts,next_cursor});
-    }
+//     if(posts.length<limit || nextPost.length===0){
+//         res.json({posts});
+//     }else{
+//         let next_cursor = posts[posts.length-1].createdAt;
+//         res.json({posts,next_cursor});
+//     }
 
     
-})
+// })
 
-// @desc    Get a specific post by id
-// @route   GET /api/posts/:id
-// @access  Public
-const getPostById =  asyncHandler( async(req,res)=>{
-    const post = await Post.findById(req.params.id);
+// @desc    Get a specific draft by id
+// @route   GET /api/drafts/:id
+// @access  Private
+const getDraftById =  asyncHandler( async(req,res)=>{
+    const draft = await Post.findById(req.params.id);
 
     if(post){
-        res.send(post);
+        res.send(draft);
     }else{
         res.setStatus(404);
-        throw new Error("Post not found.");
+        throw new Error("Draft not found.");
     }
 })
 
-// @desc    Create a new post
-// @route   POST /api/posts
+// @desc    Create a new draft
+// @route   POST /api/drafts
 // @access  Private
-const createPost = asyncHandler(async (req, res) => {
+const createDraft = asyncHandler(async (req, res) => {
     const { title, image, tags, text} = req.body;
-    //Check if an existing post has the same title or image (not including the default)
+    //Check if the draft has the same title or image (not including the default) as an existing post
     const postTitleExists = await Post.findOne({title});
+    
     if(postTitleExists) return res.status(400).json({message: "Have a post with that title already!"});
 
-    const post = new Post({
+    const draft = new Post({
         title,
         text,
         tags,
         image,
     });
     try{
-        const savedPost = await post.save();
-        res.send(savedPost);
+        const savedDraft = await draft.save();
+        res.send(savedDraft);
     }catch(error){
         res.status(400).send(error);
     }
@@ -127,4 +128,4 @@ const deleteDraft = asyncHandler(async (req,res)=>{
 })
 
 
-module.exports = {getDrafts,createDraft, getDraftById, updateDraft, deleteDraft}
+module.exports = {getDrafts, createDraft, getDraftById, updateDraft, deleteDraft}

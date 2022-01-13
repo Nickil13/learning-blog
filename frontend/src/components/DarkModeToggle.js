@@ -2,9 +2,16 @@ import React from 'react'
 import { FiSun, FiMoon } from 'react-icons/fi';
 import { useGlobalContext } from '../context';
 
-export default function DarkModeToggle() {
+export default function DarkModeToggle({compact}) {
     const{theme,toggleTheme} = useGlobalContext();
     
+    if(compact){
+        return(
+            <div className="flex flex-col items-center justify-self-center cursor-pointer px-5" onClick={toggleTheme}>
+            {theme==="light" ? <FiMoon className="text-2xl text-purple-300  hover:text-white"/> : <FiSun className="text-2xl text-purple-300  hover:text-white"/>}
+        </div>
+        )
+    }
     return (
         <div className="absolute flex flex-col items-center justify-self-center py-5">
             <FiSun className="text-2xl mb-3 text-white dark:text-purple-300"/>

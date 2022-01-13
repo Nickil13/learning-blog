@@ -56,14 +56,12 @@ export default function IndividualPost() {
                     <img className="absolute inset-0 w-full h-full object-cover border-2 shadow-md dark:border-white" src={post.image} alt={post.title}/>
                 </div>
                 
-                <div className="py-10 w-full">
+                <div className="py-10 px-2 w-full">
                     <ReactMarkdown className="react-markdown">{post.text}</ReactMarkdown>
-                {/* {post.text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
-                    return <p key={index}>{paragraph}<br/><br/></p>
-                    })} */}
                 </div>
+
                 {/* Edit button  */}
-                {isLoggedIn && <button className="absolute right-0 -top-20 rounded-icon" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-2xl"/>
+                {isLoggedIn && <button className="absolute right-0 -top-16 rounded-icon" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-2xl"/>
                 </button>}
             </article>}
             
