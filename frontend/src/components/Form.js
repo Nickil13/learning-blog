@@ -5,7 +5,7 @@ import ImageInput from '../components/ImageInput';
 import ImageSelector from '../components/ImageSelector';
 import {tagData} from '../data';
 
-export default function Form({post, submitForm, btnTitle}) {
+export default function Form({post, submitForm, btnTitle, saveDraft}) {
     const[title,setTitle] = useState("");
     const[imageName,setImageName] = useState("default.jfif");
     const[imagePath,setImagePath] = useState("/images/default.jfif");
@@ -95,8 +95,7 @@ export default function Form({post, submitForm, btnTitle}) {
     }
 
     const handleComboSelect = (e) =>{
-        
-        let comboBoxes = document.querySelectorAll(".combo-box");
+        let comboBoxes = document.querySelectorAll(".combo-box select");
         let newTags = [];
         for(let i = 0; i<comboBoxes.length;i++){
             let val = comboBoxes[i].value;
@@ -152,6 +151,7 @@ export default function Form({post, submitForm, btnTitle}) {
                 </div>
 
                 <button type="submit" className="btn-primary w-3/5 mx-auto md:col-span-2">{btnTitle}</button>
+                <button type="button" className="btn-primary mt-2 px-5 w-3/5 mx-auto md:col-span-2" onClick={()=>saveDraft(title ? title : '[empty]',tags, text ? text : '[empty]', imagePath)}>Save draft</button>
             </form>
     )
 }

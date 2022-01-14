@@ -52,7 +52,28 @@ export default function EditPost() {
         }
     }
 
+    const saveDraft = async (title,tags,text,image)=>{
+        setLoading(true);
+        try{
+            let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
 
+            const {data} = await axios.post("/api/drafts"
+                ,{title,image,tags,text,postId:id},config);
+               
+            updateMessage(`Successfully created draft: ${title}`,"success",`/admin/drafts/${data._id}`);
+            setLoading(false);
+            
+        }catch(error){
+            if(error.response.status === 400){
+                updateMessage(error.response.data.message,"error");
+    
+            }else if(error.response.status === 401){
+                updateMessage("Unauthorized to create drafts.","error");
+            }
+            setLoading(false);
+        }
+        
+    }
     
     return (
         <>{loading ? <h1>Loading post to edit...</h1> : !post ? 
@@ -61,8 +82,7 @@ export default function EditPost() {
         </div> :
             <div className="grid place-items-center">
                 <h1 className="mb-10 text-center">Edit Post: {post.title}</h1>
-                <Form post={post} btnTitle={'Edit Post'} submitForm={submitEditForm}/>
-
+                <Form post={post} btnTitle={'Edit Post'} submitForm={submitEditForm} saveDraft={saveDraft}/>
                 <div>
                     {loading ? <p>loading...</p> : message && <Message type={messageType} link={messageLink}>{message}</Message>}
                 </div>

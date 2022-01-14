@@ -7,9 +7,7 @@ const router = express.Router();
 
 router.route('/')
     .post(protect, createDraft)
-    .put(protect,updateDraft);
-
-router.route('/admin')
+    .put(protect,updateDraft)
     .get(protect,getDrafts);
     
 router.route('/:id')

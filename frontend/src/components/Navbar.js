@@ -13,7 +13,8 @@ export default function Navbar({isSmallScreen}) {
     const{isLoggedIn,userInfo,logout,theme} = useGlobalContext();
     const[isMenuShowing,setIsMenuShowing] = useState(false);
     const[isCategoryMenuShowing,setIsCategoryMenuShowing] = useState(false);
-    const[selectedCategory,setSelectedCategory] = useState(history.location.search ? history.location.search.split("=")[1] : '');
+    let query = history.location.search;
+    const[selectedCategory,setSelectedCategory] = useState(query.includes("category") ? query.split("=")[1] : '');
     const navContainer = useRef(null);
     
  
@@ -28,11 +29,10 @@ export default function Navbar({isSmallScreen}) {
     
     useEffect(()=>{
       //Update category icon on location change
-      let query = history.location.search;
-      if(query){
+      if(query && query.includes("category")){
         setSelectedCategory(query.split("=")[1]);
       }
-    },[history.location])
+    },[history.location, query])
 
     useEffect(()=>{
         document.addEventListener("mousedown",handleOffClick);
@@ -99,7 +99,7 @@ export default function Navbar({isSmallScreen}) {
     }
 
     return (
-    <header className="transparent md:w-4/5 mx-auto">
+    <header className="transparent md:max-w-5xl mx-auto">
         {!isSmallScreen && <div className="absolute font-display font-bold text-gray-700 dark:text-purple-300 p-5"><Link to="/">Learning Blog</Link></div>}
         
         {/* Mobile Navbar */}
@@ -111,7 +111,7 @@ export default function Navbar({isSmallScreen}) {
           <div className="flex items-center justify-end w-full">
             {/* Subject select */}
             <div className="relative mx-2">
-              <span className="nav-icon " onClick={()=>setIsCategoryMenuShowing(true)}>{selectedCategory ? iconData.find((icon)=>icon.name===selectedCategory).icon : iconData.find((icon)=>icon.name==="home").icon}</span>
+              <span className="nav-icon" onClick={()=>setIsCategoryMenuShowing(true)}>{selectedCategory ? iconData.find((icon)=>icon.name===selectedCategory).icon : iconData.find((icon)=>icon.name==="home").icon}</span>
               
               {/* Category Menu Modal */}
               <ul className={`absolute bg-black z-20 opacity-80 p-4 rounded-md mt-5 top-full -left-1/4 ${!isCategoryMenuShowing && 'hidden'}`} id="category-menu">

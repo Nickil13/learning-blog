@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import { useGlobalContext } from "./context";
-import {Admin, AdminPosts, Drafts, EditPost, Home, IndividualPost, Login, NewPost, Posts} from './pages';
+import {Admin, AdminPosts, Draft, Drafts, EditPost, EditDraft, Home, IndividualPost, Login, NewPost, Posts, Stats} from './pages';
 import {Navbar, Footer} from './components';
 
 const SMALL_BREAKPOINT = 600;
@@ -37,11 +37,17 @@ function App() {
                   {isLoggedIn ? <Redirect to="/admin"/> : <Login/>}
                 </Route>
                 <Route path="/admin/posts"><AdminPosts/></Route>
-                {/* <Route path="/admin/posts/:pageNumber"><AdminPosts/></Route> */}
                 <Route path="/admin/new-post"><NewPost/></Route>
                 <Route path="/admin/edit-post/:id"><EditPost/></Route>
-                <Route path="/admin/drafts">
+                <Route path="/admin/drafts" exact>
                   <Drafts/>
+                </Route>
+                <Route path="/admin/edit-draft/:id"><EditDraft/></Route>
+                <Route path="/admin/drafts/:id">
+                  <Draft/>
+                </Route>
+                <Route path="/admin/stats">
+                  <Stats/>
                 </Route>
                 <Route path="/admin">
                   {!isLoggedIn ? <Redirect to="/login"/> : <Admin/>}

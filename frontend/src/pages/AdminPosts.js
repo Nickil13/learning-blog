@@ -5,11 +5,10 @@ import Alert from '../components/Alert';
 import Loader from '../components/Loader';
 import { useGlobalContext} from '../context';
 import Pagination from '../components/Pagination';
-import { useParams, useLocation, useHistory } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 
 export default function AdminPosts() {
     const[posts,setPosts] = useState([]);
-    // const {pageNumber} = useParams() || 1;
     const[pages,setPages]= useState(1);
     const[page,setPage] = useState(1);
     const{userInfo,showAlert,isAlertShowing,isConfirmDelete, setIsConfirmDelete,loading,setLoading} = useGlobalContext();
@@ -105,7 +104,7 @@ export default function AdminPosts() {
             <div className="p-10 w-full max-w-5xl">
                 <h2 className="border-b-2 pb-2 m-2">Posts</h2>
                 
-                {loading? <Loader/> : posts.length === 0 ? <h2>No Posts Found</h2> : (<>
+                {loading? <Loader/> : posts.length === 0 ? <p className="m-2">No Posts Found</p> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
                     <p>Filter by: </p>
                     <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect}>
@@ -126,7 +125,7 @@ export default function AdminPosts() {
                     { 
                     posts.map((post)=>{
                         return(
-                            <AdminRow key={post._id} post={post} handleDeletePost={handleDeletePost}/>
+                            <AdminRow key={post._id} document={post} handleDeleteDocument={handleDeletePost} handleEditDocument={()=>history.push(`/admin/edit-post/${post._id}`)} documentPath='/posts'/>
                         );
                     })
                     }
