@@ -6,6 +6,7 @@ import Loader from '../components/Loader';
 import { useGlobalContext} from '../context';
 import Pagination from '../components/Pagination';
 import { useLocation, useHistory} from 'react-router';
+import { getParamValue } from '../utils/handleParams';
 
 export default function Drafts() {
     const[drafts,setDrafts] = useState([]);
@@ -18,9 +19,17 @@ export default function Drafts() {
     const history = useHistory();
     const location = useLocation();
     const [pageNumber,setPageNumber] = useState(location.search ? location.search.split("=")[1] : 1);
+    const [filter, setFilter] = useState('');
     
     useEffect(()=>{
-        setPageNumber(location.search ? location.search.split("=")[1] : 1);
+        if(location.search.includes("page")){
+            let currentPage = getParamValue(location, "page");
+            setPageNumber(currentPage ? currentPage : 1);
+        }
+        if(location.search.includes("filter")){
+            let currentFilter = getParamValue(location, "filter");
+            setFilter(currentFilter);
+        }
     },[location])
 
 
@@ -31,7 +40,7 @@ export default function Drafts() {
             try{
                 let config = {headers:{Authorization: `Bearer ${userInfo.token}`}};
                 
-                const {data} = await axios.get(`/api/drafts?pageNumber=${pageNumber}`, config);
+                const {data} = await axios.get(`/api/drafts?pageNumber=${pageNumber}&filter=${filter}`, config);
 
                 setPages(data.pages);
                 setDrafts(data.drafts);
@@ -45,7 +54,7 @@ export default function Drafts() {
             }
         }
         fetchDrafts();
-    },[pageNumber,deleteSuccess])
+    },[pageNumber, filter, deleteSuccess])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
@@ -76,26 +85,12 @@ export default function Drafts() {
         setDraftToDelete(draft);
     }
 
-    const sortPosts = (criteria) => {
-        // let sortedPosts = [...posts];
-        let sortedPosts = [];
-        if(criteria==="title"){
-            sortedPosts = sortedPosts.sort((a,b)=>(a.title> b.title) ? 1 : -1);
-        }else if(criteria==="tags"){
-            sortedPosts = sortedPosts.sort((a,b)=>(a.tags[0] > b.tags[0]) ? 1 : -1);
-        }else if(criteria==="date"){
-            sortedPosts = sortedPosts.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1);
-        }
-
-        // setPosts(sortedPosts);
-        if(page!==0){
-            history.push('/admin/page/1');
-            history.push('/admin/posts/?page=1');
-        }
+    const sortDrafts = (criteria) => {
+        history.push(`/admin/drafts/?page=1&filter=${criteria}`);
         
     }
     const handleFilterSelect = (e) => {
-        sortPosts(e.target.value);
+        sortDrafts(e.target.value);
     }
   
     return (
@@ -111,17 +106,17 @@ export default function Drafts() {
                 {loading? <Loader/> : drafts.length === 0 ? <p className="m-2">No Drafts Found</p> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
                     <p>Filter by: </p>
-                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect}>
-                        <option value="" hidden></option>
+                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect} value={filter}>
+                        <option value="" hidden>category</option>
                         <option value="title">title</option>
                         <option value="tags">tags</option>
                         <option value="date">date</option>
                     </select>
                 </div>
                 <div className="hidden sm:grid grid-cols-admin-table  sm:mb-1 rounded-md dark:text-gray-100 text-center">
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("title")}>Title</div>
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("tags")}>Tags</div>
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("date")}>Date</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortDrafts("title")}>Title</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortDrafts("tags")}>Tags</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortDrafts("date")}>Date</div>
                     <div className="lg:w-4/5 p-2 font-semibold">Edit/Remove Draft</div>       
                 </div>
 
@@ -135,12 +130,16 @@ export default function Drafts() {
                     }
                     
                     <div className="grid place-items-center">
-                            <Pagination pages={pages} page={page} baseUrl={'/admin/drafts/?page='} />
+                            <Pagination pages={pages} page={page} location={location}/>
                     </div>
                     
                 </div></>)}
                 
             </div>
+            <button className="btn-primary px-4 mt-4" onClick={()=>{
+                 history.push("/admin");
+            }}>Back to Menu</button>
+            
             {/* Alert used to confirm deleting a draft */}
             {isAlertShowing && <Alert postName={draftToDelete.title}/>}
         </div>

@@ -5,7 +5,8 @@ import Alert from '../components/Alert';
 import Loader from '../components/Loader';
 import { useGlobalContext} from '../context';
 import Pagination from '../components/Pagination';
-import { useLocation, useHistory } from 'react-router';
+import { useLocation, useHistory} from 'react-router';
+import { getParamValue } from '../utils/handleParams';
 
 export default function AdminPosts() {
     const[posts,setPosts] = useState([]);
@@ -17,10 +18,18 @@ export default function AdminPosts() {
     const[postToDelete,setPostToDelete] = useState(null);
     const history = useHistory();
     const location = useLocation();
-    const [pageNumber,setPageNumber] = useState(location.search ? location.search.split("=")[1] : 1);
+    const [pageNumber,setPageNumber] = useState(1);
+    const [filter, setFilter] = useState('');
     
     useEffect(()=>{
-        setPageNumber(location.search ? location.search.split("=")[1] : 1);
+        if(location.search.includes("page")){
+            let currentPage = getParamValue(location, "page");
+            setPageNumber(currentPage ? currentPage : 1);
+        }
+        if(location.search.includes("filter")){
+            let currentFilter = getParamValue(location, "filter");
+            setFilter(currentFilter);
+        }
     },[location])
 
 
@@ -30,7 +39,7 @@ export default function AdminPosts() {
             try{
                 let config = {headers:{Authorization: `Bearer ${userInfo.token}`}};
                 
-                const {data} = await axios.get(`/api/posts/admin?pageNumber=${pageNumber}`, config);
+                const {data} = await axios.get(`/api/posts/admin?pageNumber=${pageNumber}&filter=${filter}`, config);
 
                 setPages(data.pages);
                 setPosts(data.posts);
@@ -44,7 +53,7 @@ export default function AdminPosts() {
             }
         }
         fetchPosts();
-    },[pageNumber,deleteSuccess])
+    },[pageNumber,filter,deleteSuccess])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
@@ -75,26 +84,14 @@ export default function AdminPosts() {
         setPostToDelete(post);
     }
 
-    const sortPosts = (criteria) => {
-        let sortedPosts = [...posts];
-        if(criteria==="title"){
-            sortedPosts = sortedPosts.sort((a,b)=>(a.title> b.title) ? 1 : -1);
-        }else if(criteria==="tags"){
-            sortedPosts = sortedPosts.sort((a,b)=>(a.tags[0] > b.tags[0]) ? 1 : -1);
-        }else if(criteria==="date"){
-            sortedPosts = sortedPosts.sort((a,b)=>(a.createdAt > b.createdAt) ? 1 : -1);
-        }
-
-        setPosts(sortedPosts);
-        if(page!==0){
-            // history.push('/admin/page/1');
-            history.push('/admin/posts/?page=1');
-        }
-        
+    const sortPosts = (criteria) =>{
+        history.push(`/admin/posts/?page=1&filter=${criteria}`);
     }
+    
     const handleFilterSelect = (e) => {
         sortPosts(e.target.value);
     }
+
     return (
         <div className="grid place-items-center w-full dark:bg-gray-600 py-10 rounded-md">
             <h1 className="mb-5">Admin Dashboard</h1>
@@ -107,8 +104,8 @@ export default function AdminPosts() {
                 {loading? <Loader/> : posts.length === 0 ? <p className="m-2">No Posts Found</p> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
                     <p>Filter by: </p>
-                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect}>
-                        <option value="" hidden></option>
+                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect} value={filter}>
+                        <option value="" hidden>category</option>
                         <option value="title">title</option>
                         <option value="tags">tags</option>
                         <option value="date">date</option>
@@ -131,12 +128,16 @@ export default function AdminPosts() {
                     }
                     
                     <div className="grid place-items-center">
-                            <Pagination pages={pages} page={page} baseUrl={'/admin/posts/?page='} />
+                            <Pagination pages={pages} page={page} location={location} />
                     </div>
                     
                 </div></>)}
                 
             </div>
+            <button className="btn-primary px-4 mt-4" onClick={()=>{
+                 history.push("/admin");
+            }}>Back to Menu</button>
+
             {/* Alert used to confirm deleting a post */}
             {isAlertShowing && <Alert postName={postToDelete.title}/>}
         </div>

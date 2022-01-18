@@ -22,13 +22,8 @@ export default function Post({_id,title,text,tags,image,createdAt}) {
                   })}
               </ul>
               
-              <div className="p-5">{
-                  
+              <div className="p-5 w-full">{
                   <ReactMarkdown className="react-markdown">{text}</ReactMarkdown>
-                //  text.replace('\n\n','\n').split('\n').map((paragraph,index)=>{
-                //     return <p className="text-center w-full" key={index}>{paragraph}<br/><br/></p>
-                //     return <p className="w-full" key={index}>{paragraph}<br/><br/></p>
-                // })
               }</div>
         </article>
     )

@@ -7,12 +7,24 @@ const Post = require('../models/Post');
 const getAllPosts = asyncHandler(async (req,res)=>{
     const pageSize = 8;
     const page = Number(req.query.pageNumber) || 1;
+    const filter = req.query.filter;
+    let posts = [];
 
     //sort criteria
 
     const count = await Post.countDocuments({});
-    const posts = await Post.find({}).limit(pageSize).skip(pageSize * (page-1));
-
+    console.log(req.query);
+    if(filter){
+        if(filter==="title"){
+            console.log('sorting by title');
+            posts = await Post.find({}).sort({title: 1}).limit(pageSize).skip(pageSize * (page-1));
+        }else if(filter==="tags"){
+            posts = await Post.find({}).sort({tags: 1}).limit(pageSize).skip(pageSize * (page-1));
+        }
+    }else{
+        posts = await Post.find({}).limit(pageSize).skip(pageSize * (page-1));
+    }
+    
     res.json({posts, page, pages: Math.ceil(count/pageSize)});
 })
 
