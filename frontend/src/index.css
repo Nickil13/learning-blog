@@ -69,7 +69,7 @@ html{
         @apply list-decimal list-inside mb-1 dark:text-gray-400;
     }
     .react-markdown li{
-        @apply dark:text-gray-300 mb-2;
+        @apply text-gray-700 dark:text-gray-300 mb-2;
     }
     .react-markdown ul{
         @apply list-disc list-inside;

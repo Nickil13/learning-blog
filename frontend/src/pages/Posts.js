@@ -106,7 +106,7 @@ export default function Posts() {
             })}
           </div>
           <div className="grid place-items-center">
-          {loadingMore ? <h2>Loading...</h2> : nextCursor && <button className='btn-primary' onClick={()=>handleLoadMore()}>Load more</button>}
+          {loadingMore ? <h2>Loading...</h2> : nextCursor && <button className='btn-primary px-2' onClick={()=>handleLoadMore()}>Load more</button>}
 
           </div>
         </div>} 

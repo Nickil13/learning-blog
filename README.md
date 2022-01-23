@@ -29,6 +29,16 @@ Stylistically, I got more practice with Tailwind by adding extensions and workin
 
 I also learned how to upload files and save them locally, eventually moving over to Cloudinary for my image storage.
 
+## What I like about this project
+Of all my current projects I feel like this one showcases my creativity and my curiosity. 
+
+- The Navbar
+I really wanted a navbar that was on the side of the screen like a dashboard. Since this was my first time doing that, I ran into problems with responsivity. The bar was too thick on smaller screens and made it difficult to pay attention to the post feed. On screens with a smaller height, the icons had to react and the user and new post component on the bottom would get cut off (especially on mobile devices). All of these things contributed to making the blog an amazing learning experience.
+
+- Custom image selector
+Instead of using the available Cloudindary widget to grab uploaded images, I created my own custom component.  
+
+
 ## Preview
 <img src='https://user-images.githubusercontent.com/36387179/135682380-eb54622c-a17a-4abc-b9d9-e3d231a5ffc8.png' width="700">
 

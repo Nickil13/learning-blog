@@ -48,7 +48,7 @@ export default function Home() {
                 <h1 className="text-4xl mb-4">Learning Blog</h1>
                 <div className="py-4 max-w-lg text-center">
                   <p className="mb-2 dark:text-purple-400">Welcome to my blog!</p>
-                  <p>It's currently being used as a learning tool for my coding endeavours and for writing short posts about a variety of things, from animals, food and travel to games and code.</p>
+                  <p>Currently, the blog is being used as a learning tool for my coding endeavours. It is also being used for writing short posts about a variety of topics, from animals, food and travel to games and code.</p>
                 </div>
                 
             </div>

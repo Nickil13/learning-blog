@@ -4,11 +4,13 @@ import { useGlobalContext } from "./context";
 import {Admin, AdminPosts, Draft, Drafts, EditPost, EditDraft, Home, IndividualPost, Login, NewPost, Posts, Stats} from './pages';
 import {Navbar, Footer} from './components';
 
-const SMALL_BREAKPOINT = 600;
+const SMALL_WIDTH_BREAKPOINT = 600;
+const SMALL_HEIGHT_BREAKPOINT = 600;
 
 function App() {
   const{isLoggedIn} = useGlobalContext();
-  const[isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < SMALL_BREAKPOINT);
+  const[isSmallScreenWidth, setIsSmallScreenWidth] = useState(window.innerWidth < SMALL_WIDTH_BREAKPOINT);
+  const[isSmallScreenHeight, setIsSmallScreenHeight] = useState(window.innerHeight < SMALL_HEIGHT_BREAKPOINT)
 
   useEffect(()=>{
     window.addEventListener("resize", checkSize);
@@ -19,17 +21,23 @@ function App() {
 
   const checkSize = () =>{
     const width = window.innerWidth;
-    if(width>SMALL_BREAKPOINT){
-      setIsSmallScreen(false);
+    const height = window.innerHeight;
+    if(width>SMALL_WIDTH_BREAKPOINT){
+      setIsSmallScreenWidth(false);
     }else{
-      setIsSmallScreen(true);
+      setIsSmallScreenWidth(true);
+    }
+    if(height>SMALL_HEIGHT_BREAKPOINT){
+      setIsSmallScreenHeight(false);
+    }else{
+      setIsSmallScreenHeight(true);
     }
   }
 
   return (
-    <div className={`relative ${isSmallScreen ? 'min-h-nav-height mt-nav' : 'min-h-screen'} pb-24 px-5`}>
+    <div className={`relative ${isSmallScreenWidth ? 'min-h-nav-height mt-nav' : 'min-h-screen'} pb-24 px-5`}>
       <Router>
-          <Navbar isSmallScreen={isSmallScreen}/>
+          <Navbar isSmallScreenWidth={isSmallScreenWidth} isSmallScreenHeight={isSmallScreenHeight}/>
           <main className="grid place-items-center py-20">
             <Switch>
                 <Route exact path="/"><Home/></Route>

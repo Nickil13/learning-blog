@@ -61,7 +61,7 @@ export default function IndividualPost() {
                 </div>
 
                 {/* Edit button  */}
-                {isLoggedIn && <button className="absolute right-0 -top-16 rounded-icon" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-2xl"/>
+                {isLoggedIn && <button className="absolute right-0 -top-16 rounded-icon hover:shadow-md" onClick={()=>history.push(`/admin/edit-post/${post._id}`)}><FiEdit className="text-2xl"/>
                 </button>}
             </article>}
             

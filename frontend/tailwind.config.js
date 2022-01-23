@@ -25,6 +25,11 @@ module.exports = {
       },
       minHeight:{
         'nav-height': 'calc(100vh - 68px)',
+      },
+      spacing: {
+        '4/3': '133.33333%',
+        '3/2': '150%',
+        '5/3': '166.66667%'
       }
     }
   },
