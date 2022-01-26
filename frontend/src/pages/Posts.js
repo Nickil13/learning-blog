@@ -68,11 +68,9 @@ export default function Posts() {
              const response = await axios.get(`/api/posts?${params}`);
             
               setPosts([...posts,...response.data.posts]);
-            
-             
               setNextCursor(response.data.next_cursor);
-            
               setLoadingMore(false);
+
             }catch(error){
               console.log(error);
               setLoadingMore(false);
@@ -105,6 +103,7 @@ export default function Posts() {
               )
             })}
           </div>
+          
           <div className="grid place-items-center">
           {loadingMore ? <h2>Loading...</h2> : nextCursor && <button className='btn-primary px-2' onClick={()=>handleLoadMore()}>Load more</button>}
 

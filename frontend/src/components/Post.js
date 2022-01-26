@@ -14,10 +14,10 @@ export default function Post({_id,title,text,tags,image,createdAt}) {
               
               <h2 className="mt-5 mb-2 text-3xl text-center font-semibold">{title}</h2>
               <Moment className="text-gray-400" format="MMM DD, YYYY" date={createdAt}/>
-              <ul className="flex gap-2 text-gray-500 dark:text-purple-400">
+              <ul className="flex text-gray-500 dark:text-purple-400">
                   {tags.map((tag,index)=>{
                       return(
-                          <li key={index}>#{tag}</li>
+                          <li key={index} className="m-2">#{tag}</li>
                       )
                   })}
               </ul>

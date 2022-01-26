@@ -161,16 +161,16 @@ export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
           </div>
         </nav> :
 
-        <nav className={`fixed grid grid-cols-2 right-0 h-screen place-items-center justify-center gap-5 z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
+        <nav className={`fixed grid grid-cols-2 right-0 min-h-screen place-items-center justify-center z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
           {/* Arrow Slide Bar */}
-          <div className="pointer-events-auto">
-            <div className="bg-black bg-opacity-60 rounded-full p-2 shadow-md">
+          <div className="relative flex h-full pointer-events-auto">
+            <div className="bg-black bg-opacity-60 rounded-full p-2 shadow-md self-center">
             {isSidebarOpen ? <FiArrowRightCircle onClick={()=>setIsSidebarOpen(false)} className="nav-icon"/> :
             <FiArrowLeftCircle onClick={()=>setIsSidebarOpen(true)} className="nav-icon"/>
             }
             </div>
             {!isSmallScreenHeight &&
-            <ul className="bg-black bg-opacity-60 rounded-full p-2 shadow-md absolute bottom-5 pointer-events-auto">
+            <ul className="bg-black bg-opacity-60 rounded-full p-2 shadow-md absolute bottom-5 right-0 pointer-events-auto">
               {isLoggedIn && <li onClick={()=>history.push("/admin/new-post")}><AiOutlineFileAdd className="nav-icon mb-5" /></li>}
               <li id="user-icon"onClick={()=>handleUserClick("sidebar")}><AiOutlineUser className="nav-icon"/></li>
             </ul>}
@@ -209,7 +209,7 @@ export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
         </nav>
         }
 
-        {/* Sideout Menu for user */}
+        {/* User Menu for the Sidebar */}
         <ul id="user-sidebar-menu" className={` fixed bg-black z-20 opacity-80 text-white rounded-md ${!isUserSidebarShowing && "hidden"}`}>
                 <li className="py-1 px-2"><strong>{userInfo.username}</strong></li>
                 <li className="hover:text-purple-300 py-1 px-2 cursor-pointer" onClick={handleDashboardClick}>Dashboard</li>
