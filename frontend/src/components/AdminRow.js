@@ -19,7 +19,7 @@ export default function AdminRow({document, documentPath, handleEditDocument, ha
         {/* Second Column - Tags */}
         <div className="lg:w-4/5 p-2">
             <ul>
-                {document.tags.map((tag,index)=>{
+                {document.tags.slice(0).reverse().map((tag,index)=>{
                     return <li key={index} className="text-purple-600 dark:text-purple-300 p-1">#{tag}</li>
                 })}
             </ul>

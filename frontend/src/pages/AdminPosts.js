@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import AdminRow from '../components/AdminRow';
 import Alert from '../components/Alert';
@@ -7,6 +7,7 @@ import { useGlobalContext} from '../context';
 import Pagination from '../components/Pagination';
 import { useLocation, useHistory} from 'react-router';
 import { getParamValue } from '../utils/handleParams';
+
 
 export default function AdminPosts() {
     const[posts,setPosts] = useState([]);
@@ -53,30 +54,30 @@ export default function AdminPosts() {
             }
         }
         fetchPosts();
-    },[pageNumber,filter,deleteSuccess])
+    },[pageNumber,filter,deleteSuccess, setLoading, userInfo.token])
+
+    const deletePost = useCallback(async () =>{
+        setLoading(true);
+        try{
+            let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
+            await axios.delete(`/api/posts/${postToDelete._id}`,config);
+            
+            setDeleteSuccess(true);
+            setIsDeleting(false);
+            setIsConfirmDelete(false);
+            setPostToDelete(null);
+            setLoading(false);
+        }catch(error){
+            console.log(error);
+            setLoading(false);
+        }
+    },[postToDelete, setIsConfirmDelete, setLoading, userInfo.token])
 
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
-            const deletePost = async () =>{
-                setLoading(true);
-                try{
-                    let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
-                    await axios.delete(`/api/posts/${postToDelete._id}`,config);
-                    
-                    setDeleteSuccess(true);
-                    setIsDeleting(false);
-                    setIsConfirmDelete(false);
-                    setPostToDelete(null);
-                    setLoading(false);
-                }catch(error){
-                    console.log(error);
-                    setLoading(false);
-                }
-            }
             deletePost();
-            
         }
-    },[isAlertShowing])
+    },[isAlertShowing, isConfirmDelete, isDeleting, deletePost])
 
     const handleDeletePost = (post) =>{
         showAlert();
@@ -84,12 +85,9 @@ export default function AdminPosts() {
         setPostToDelete(post);
     }
 
-    const sortPosts = (criteria) =>{
-        history.push(`/admin/posts/?page=1&filter=${criteria}`);
-    }
-    
-    const handleFilterSelect = (e) => {
-        sortPosts(e.target.value);
+    const handleFilterSelect = (category) => {
+        // Sort posts
+        history.push(`/admin/posts/?page=1&filter=${category}`);
     }
 
     return (
@@ -104,7 +102,7 @@ export default function AdminPosts() {
                 {loading? <Loader/> : posts.length === 0 ? <p className="m-2">No Posts Found</p> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
                     <p>Filter by: </p>
-                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect} value={filter}>
+                    <select className="rounded" name="post-filter" id="post-filter" onChange={(e)=>handleFilterSelect(e.target.value)} value={filter}>
                         <option value="" hidden>category</option>
                         <option value="title">title</option>
                         <option value="tags">tags</option>
@@ -112,9 +110,9 @@ export default function AdminPosts() {
                     </select>
                 </div>
                 <div className="hidden sm:grid grid-cols-admin-table  sm:mb-1 rounded-md dark:text-gray-100 text-center">
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("title")}>Title</div>
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("tags")}>Tags</div>
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortPosts("date")}>Date</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>handleFilterSelect("title")}>Title</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>handleFilterSelect("tags")}>Tags</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>handleFilterSelect("date")}>Date</div>
                     <div className="lg:w-4/5 p-2 font-semibold">Edit/Remove Post</div>       
                 </div>
 

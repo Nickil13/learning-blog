@@ -13,14 +13,18 @@ const getAllPosts = asyncHandler(async (req,res)=>{
     //sort criteria
 
     const count = await Post.countDocuments({});
-    console.log(req.query);
+    
     if(filter){
         if(filter==="title"){
-            console.log('sorting by title');
             posts = await Post.find({}).sort({title: 1}).limit(pageSize).skip(pageSize * (page-1));
+
         }else if(filter==="tags"){
             posts = await Post.find({}).sort({tags: 1}).limit(pageSize).skip(pageSize * (page-1));
+            
+        }else if(filter==="date"){
+            posts = await Post.find({}).sort({createdAt: -1}).limit(pageSize).skip(pageSize * (page-1));
         }
+
     }else{
         posts = await Post.find({}).limit(pageSize).skip(pageSize * (page-1));
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import AdminRow from '../components/AdminRow';
 import Alert from '../components/Alert';
@@ -32,16 +32,15 @@ export default function Drafts() {
         }
     },[location])
 
-
+    //Load drafts
     useEffect(()=>{
-        //Load drafts
         const fetchDrafts = async () =>{
             setLoading(true);
             try{
                 let config = {headers:{Authorization: `Bearer ${userInfo.token}`}};
                 
                 const {data} = await axios.get(`/api/drafts?pageNumber=${pageNumber}&filter=${filter}`, config);
-
+    
                 setPages(data.pages);
                 setDrafts(data.drafts);
                 setPage(data.page);
@@ -54,30 +53,29 @@ export default function Drafts() {
             }
         }
         fetchDrafts();
-    },[pageNumber, filter, deleteSuccess])
-
+    },[pageNumber, filter, deleteSuccess, setLoading, userInfo.token])
+    const deleteDraft = useCallback(async () =>{
+        setLoading(true);
+        try{
+            let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
+            await axios.delete(`/api/drafts/${draftToDelete._id}`,config);
+            
+            setDeleteSuccess(true);
+            setIsDeleting(false);
+            setIsConfirmDelete(false);
+            setDraftToDelete(null);
+            setLoading(false);
+        }catch(error){
+            console.log(error);
+            setLoading(false);
+        }
+    }, [draftToDelete, userInfo.token, setIsConfirmDelete, setLoading])
+    
     useEffect(()=>{
         if(!isAlertShowing && isConfirmDelete && isDeleting){
-            const deleteDraft = async () =>{
-                setLoading(true);
-                try{
-                    let config = {headers:{'Content-Type':'application/json', Authorization: `Bearer ${userInfo.token}`}};
-                    await axios.delete(`/api/drafts/${draftToDelete._id}`,config);
-                    
-                    setDeleteSuccess(true);
-                    setIsDeleting(false);
-                    setIsConfirmDelete(false);
-                    setDraftToDelete(null);
-                    setLoading(false);
-                }catch(error){
-                    console.log(error);
-                    setLoading(false);
-                }
-            }
             deleteDraft();
-            
         }
-    },[isAlertShowing])
+    },[isAlertShowing, isConfirmDelete, isDeleting, deleteDraft])
 
     const handleDeleteDraft = (draft) =>{
         showAlert();
@@ -85,12 +83,9 @@ export default function Drafts() {
         setDraftToDelete(draft);
     }
 
-    const sortDrafts = (criteria) => {
-        history.push(`/admin/drafts/?page=1&filter=${criteria}`);
-        
-    }
-    const handleFilterSelect = (e) => {
-        sortDrafts(e.target.value);
+    const handleFilterSelect = (category) => {
+        // Sort drafts
+        history.push(`/admin/drafts/?page=1&filter=${category}`);
     }
   
     return (
@@ -106,7 +101,7 @@ export default function Drafts() {
                 {loading? <Loader/> : drafts.length === 0 ? <p className="m-2">No Drafts Found</p> : (<>
                 <div className="sm:hidden flex gap-5 px-2 py-5 justify-end">
                     <p>Filter by: </p>
-                    <select className="rounded" name="post-filter" id="post-filter" onChange={handleFilterSelect} value={filter}>
+                    <select className="rounded" name="post-filter" id="post-filter" onChange={(e)=>handleFilterSelect(e.target.value)} value={filter}>
                         <option value="" hidden>category</option>
                         <option value="title">title</option>
                         <option value="tags">tags</option>
@@ -114,9 +109,9 @@ export default function Drafts() {
                     </select>
                 </div>
                 <div className="hidden sm:grid grid-cols-admin-table  sm:mb-1 rounded-md dark:text-gray-100 text-center">
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortDrafts("title")}>Title</div>
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortDrafts("tags")}>Tags</div>
-                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>sortDrafts("date")}>Date</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>handleFilterSelect("title")}>Title</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>handleFilterSelect("tags")}>Tags</div>
+                    <div className="lg:w-4/5 p-2 font-semibold cursor-pointer" onClick={()=>handleFilterSelect("date")}>Date</div>
                     <div className="lg:w-4/5 p-2 font-semibold">Edit/Remove Draft</div>       
                 </div>
 
@@ -130,7 +125,7 @@ export default function Drafts() {
                     }
                     
                     <div className="grid place-items-center">
-                            <Pagination pages={pages} page={page} location={location}/>
+                        <Pagination pages={pages} page={page} location={location}/>
                     </div>
                     
                 </div></>)}

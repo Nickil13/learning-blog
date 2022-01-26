@@ -29,7 +29,7 @@ export default function Draft() {
         }
         loadDraft();
         
-    },[id,setLoading])
+    },[id,setLoading, userInfo.token])
 
     if(loading){
         return(

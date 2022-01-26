@@ -5,7 +5,7 @@ export default function NavDropdown({isShowing, itemList, filteredItems, onClick
   return(
       <div>
           <ul className={`absolute bg-black z-20 opacity-80 p-4 rounded-md mt-5 
-          ${location=='left' ? 'bottom-5 right-4/3' : 'top-full -left-1/4'} 
+          ${location==='left' ? 'bottom-5 right-4/3' : 'top-full -left-1/4'} 
           ${!isShowing && 'hidden'}`} id={id}>
             {itemList.filter((item)=>filteredItems.includes(item.name)===false).map((item, index)=>{
                   return(

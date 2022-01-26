@@ -8,7 +8,6 @@ import { useGlobalContext } from '../context';
 import { iconData } from '../data';
 import { NavDropdown } from '../components';
 
-
 export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
     const history = useHistory();
     const[isSidebarOpen,setIsSidebarOpen] = useState(false);
@@ -170,9 +169,9 @@ export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
             <FiArrowLeftCircle onClick={()=>setIsSidebarOpen(true)} className="nav-icon"/>
             }
             </div>
-            {isLoggedIn && !isSmallScreenHeight &&
+            {!isSmallScreenHeight &&
             <ul className="bg-black bg-opacity-60 rounded-full p-2 shadow-md absolute bottom-5 pointer-events-auto">
-              <li onClick={()=>history.push("/admin/new-post")}><AiOutlineFileAdd className="nav-icon mb-5" /></li>
+              {isLoggedIn && <li onClick={()=>history.push("/admin/new-post")}><AiOutlineFileAdd className="nav-icon mb-5" /></li>}
               <li id="user-icon"onClick={()=>handleUserClick("sidebar")}><AiOutlineUser className="nav-icon"/></li>
             </ul>}
           </div>

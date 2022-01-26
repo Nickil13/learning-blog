@@ -72,7 +72,7 @@ export default function Home() {
         <div className="w-full border-t-2 pt-5 mt-6">
           <h2 className="text-center p-5 mb-5">Older Posts</h2>
           {/* Older Posts List */}
-          <div className="grid auto-cols-fr md:grid-cols-2 gap-5">
+          <div className="grid auto-cols-fr md:grid-cols-2 gap-10">
             {oldPosts.length ===0 ? <h2>No older posts</h2> :
             oldPosts.map((post)=>{
               return <Card key={post._id} {...post}/>
