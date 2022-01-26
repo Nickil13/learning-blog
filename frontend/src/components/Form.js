@@ -137,10 +137,10 @@ export default function Form({post, submitForm, btnTitle, saveDraft}) {
                     <label className="mb-3 dark:text-gray-400 font-semibold" htmlFor="tags">Tags</label>
                     <div className="flex gap-5 justify-center">
                         <ComboBox name="tag1" list={tagList} onChange={handleComboSelect}/>
-                        <ComboBox name="tag2" list={tagList} hidden={currentTags<2} onChange={handleComboSelect}/>
-                        <ComboBox name="tag3" list={tagList} hidden={currentTags<3} onChange={handleComboSelect}/>
+                        <ComboBox name="tag2" className="ml-2" list={tagList} hidden={currentTags<2} onChange={handleComboSelect}/>
+                        <ComboBox name="tag3" className="ml-2" list={tagList} hidden={currentTags<3} onChange={handleComboSelect}/>
                         {currentTags<3 &&
-                        <button className="dark:text-white" type="button" onClick={()=>setCurrentTags(currentTags+1)}>+</button>}
+                        <button className="dark:text-white ml-2" type="button" onClick={()=>setCurrentTags(currentTags+1)}>+</button>}
                     </div>
                 </div>
                 

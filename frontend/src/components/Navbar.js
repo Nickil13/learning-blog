@@ -161,7 +161,7 @@ export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
           </div>
         </nav> :
 
-        <nav className={`fixed grid grid-cols-2 right-0 min-h-screen place-items-center justify-center z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
+        <nav className={`fixed grid grid-cols-2 right-0 min-h-nav-height place-items-center justify-center z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
           {/* Arrow Slide Bar */}
           <div className="relative flex h-full pointer-events-auto">
             <div className="bg-black bg-opacity-60 rounded-full p-2 shadow-md self-center">
@@ -177,7 +177,7 @@ export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
           </div>
 
           {/* Nav Icons */}
-          <div className={`relative grid bg-black bg-opacity-50 pointer-events-auto h-screen pt-44`} ref={navContainer}>
+          <div className={`relative grid bg-black bg-opacity-50 pointer-events-auto min-h-nav-height pt-44`} ref={navContainer}>
             <DarkModeToggle/>
             {!isSmallScreenHeight ? 
             <ul className="flex flex-col grid-start-2 p-5 pointer-events-auto">
