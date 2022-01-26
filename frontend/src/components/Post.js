@@ -13,7 +13,7 @@ export default function Post({_id,title,text,tags,image,createdAt}) {
             </div>
               
               <h2 className="mt-5 mb-2 text-3xl text-center font-semibold">{title}</h2>
-              <Moment className="text-gray-400" format="MMM DD, YYYY" date={createdAt}/>
+              <Moment className="text-gray-400 w-full text-center" format="MMM DD, YYYY" date={createdAt}/>
               <ul className="flex text-gray-500 dark:text-purple-400">
                   {tags.map((tag,index)=>{
                       return(
