@@ -163,7 +163,7 @@ export default function Navbar({isSmallScreenWidth, isSmallScreenHeight}) {
 
         <nav className={`fixed grid grid-cols-2 right-0 min-h-screen place-items-center justify-center z-10 pointer-events-none ${!isSidebarOpen && "transform translate-x-1/2"} transition duration-500 ease-in-out`}>
           {/* Arrow Slide Bar */}
-          <div className="relative flex h-full pointer-events-auto">
+          <div className="bg-pink-100 flex h-full pointer-events-auto">
             <div className="bg-black bg-opacity-60 rounded-full p-2 shadow-md self-center">
             {isSidebarOpen ? <FiArrowRightCircle onClick={()=>setIsSidebarOpen(false)} className="nav-icon"/> :
             <FiArrowLeftCircle onClick={()=>setIsSidebarOpen(true)} className="nav-icon"/>
