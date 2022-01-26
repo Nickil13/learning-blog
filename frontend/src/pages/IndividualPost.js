@@ -44,7 +44,7 @@ export default function IndividualPost() {
             </div> 
                 : <article className="grid place-items-center w-full max-w-3xl mx-auto relative">
                 <h1 className="text-center mb-5">{post.title}</h1>
-                <Moment className="text-gray-400" format="MMM DD, YYYY" date={post.createdAt}/>
+                <Moment className="text-gray-400 w-full text-center" format="MMM DD, YYYY" date={post.createdAt}/>
                 <ul className="flex text-gray-500 dark:text-purple-400 mb-5">
                     {post.tags.map((tag,index)=>{
                         return(
