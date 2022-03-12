@@ -1,8 +1,7 @@
-const { caretColor } = require("tailwindcss/defaultTheme");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-    purge: ["./src/**/*.js"],
+    content: ["./src/**/*.js"],
     darkMode: "class", // or 'media' or 'class'
     theme: {
         fontFamily: {
