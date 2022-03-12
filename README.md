@@ -1,8 +1,10 @@
-# Personal Blog
-A blog with a backend Node.js server and a React frontend. Users can perform basic CRUD operations with posts, with authentication and authorization required.
+# Learning Blog
+A personal blog with a Node.js backend and a React frontend. Users can perform basic CRUD operations with posts, with authentication and authorization required.
 
 - Posts can be filtered by category
 - Posts can be managed by the logged in user using an Admin dashboard.
+  - Upload images to Cloudinary
+  - Save posts as drafts
 - Darkmode feature
 
 ## Live site
@@ -11,9 +13,9 @@ A blog with a backend Node.js server and a React frontend. Users can perform bas
 ## Technologies Used
 - HTML
 - Tailwind CSS
-- React JS
+- React
 - MongoDB, Mongoose
-- Nodejs, Express
+- Node.js, Express
 
 ## My process
 I started out working on the frontend, developing the Home page and the Navbar. Then I worked on making the other pages, routing and styling. I had a user saved to local storage to work with frontend authentication. I also had some local data I used to visualize the posts.
@@ -40,5 +42,4 @@ Instead of using the available Cloudindary widget to grab uploaded images, I cre
 
 
 ## Preview
-<img src='https://user-images.githubusercontent.com/36387179/135682380-eb54622c-a17a-4abc-b9d9-e3d231a5ffc8.png' width="700">
-
+<img src='https://user-images.githubusercontent.com/36387179/152872005-7139926f-9bb2-4cb2-a2c4-8d01b06c9438.PNG' width="700">
