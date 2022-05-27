@@ -2,7 +2,6 @@ const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-const fileUpload = require("express-fileupload");
 const connectDB = require("./config/db");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
@@ -36,7 +35,6 @@ app.use("/api", APILimiter);
 
 // Body parser and file upload
 app.use(express.json({ limit: "50mb" }));
-app.use(fileUpload());
 
 // Data sanitization
 app.use(mongoSanitize());
